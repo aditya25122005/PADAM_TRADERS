@@ -1,0 +1,123 @@
+<style>
+    .navbar-colored {
+        background: linear-gradient(135deg, #2b1c18, #4d3324); /* Deeper Brown Gradient */
+        backdrop-filter: blur(10px); /* Slightly stronger blur */
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5); /* Stronger, more elegant shadow */
+        transition: background 0.5s ease, box-shadow 0.3s ease;
+    }
+
+    .navbar-colored .navbar-brand {
+        color: #fce762; /* Brighter, more vibrant gold */
+        font-size: 2rem; /* Larger font size */
+        font-weight: 900; /* Bolder font weight */
+        letter-spacing: 2px; /* Increased letter spacing */
+        text-transform: uppercase;
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .navbar-colored .navbar-brand:hover {
+        color: #fff8e1; /* Lighter hover color */
+        transform: scale(1.08) rotate(-1deg);
+    }
+
+    .navbar-colored .nav-link {
+        position: relative;
+        color: #f7d14d;
+        font-weight: 600;
+        font-size: 1.1rem; /* Larger link font size */
+        margin: 0 15px; /* Increased spacing between links */
+        transition: color 0.3s ease, font-weight 0.3s ease;
+    }
+
+    .navbar-colored .nav-link:hover {
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    /* underline animation on hover */
+    .navbar-colored .nav-link::after {
+        content: "";
+        position: absolute;
+        width: 0%;
+        height: 3px; /* Thicker underline */
+        left: 50%;
+        bottom: -6px; /* Lower position */
+        background-color: #fce762;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transform: translateX(-50%);
+    }
+
+    .navbar-colored .nav-link:hover::after {
+        width: 80%;
+    }
+
+    /* active nav link styling */
+    .navbar-colored .nav-link.active {
+        color: #ffffff;
+        font-weight: 700;
+    }
+    .navbar-colored .nav-link.active::after {
+        width: 80%;
+        background-color: #ffffff; /* White underline for active link */
+    }
+
+    .navbar-colored .navbar-toggler {
+        border: none;
+        outline: none;
+    }
+
+    .navbar-colored .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28252, 231, 98, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    /* smooth pulse animation on hover brand */
+    @keyframes pulseGlow {
+        0% { text-shadow: 0 0 5px #fce762, 0 0 10px rgba(252, 231, 98, 0.6); }
+        50% { text-shadow: 0 0 15px #fff176, 0 0 25px rgba(255, 255, 200, 0.8); }
+        100% { text-shadow: 0 0 5px #fce762, 0 0 10px rgba(252, 231, 98, 0.6); }
+    }
+
+    .navbar-colored .navbar-brand:hover {
+        animation: pulseGlow 1.5s infinite;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-colored sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">PADAM TRADERS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/#circles">View Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="/register">Sign Up</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const links = document.querySelectorAll(".navbar-colored .nav-link");
+    const currentPath = window.location.pathname;
+
+    links.forEach(link => {
+      // Clear any previous 'active'
+      link.classList.remove("active");
+
+      // Match link path with current path
+      if (link.getAttribute("href") === currentPath || 
+          (link.getAttribute("href") === "/" && currentPath === "")) {
+        link.classList.add("active");
+      }
+    });
+  });
+</script>

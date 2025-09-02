@@ -1,0 +1,129 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Make navbar stick to the top without extra space */
+nav {
+    margin: 0;
+    padding: 0;
+}
+
+/* Ensure slideshow container has no extra margin */
+.slideshow-container {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    width: 100%;
+    height: 70vh; /* fixed banner height */
+    overflow: hidden;
+}
+
+.slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* maintain aspect ratio */
+    background: #c7b02d; /* fallback color */
+}
+
+.slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+/* Removed arrows and dots CSS */
+
+
+
+
+
+
+
+
+.prod-heading {
+    /* Basic layout properties (unchanged) */
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    
+    /* Enhanced typography */
+    font-size: 2rem; /* Larger and more impactful font size */
+    font-weight: 800; /* Bolder font weight */
+    font-family: 'Montserrat', sans-serif; /* A modern, clean font (you'll need to link this from Google Fonts or similar) */
+    text-transform: uppercase; /* All caps for a strong visual impact */
+    letter-spacing: 2px; /* Add some space between letters */
+    
+    /* Color and Effects */
+    color: #fce762; /* A vibrant, bright gold */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Add a subtle shadow for depth */
+
+    /* Animation */
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Optional: Add a keyframe animation for a subtle fade-in effect on load */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.circles{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0px;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+.circles div{
+    background-color: rgb(255, 255, 255);
+    color: wheat;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    height: 400px;
+    width: 400px;
+    border :7px solid red;
+    display: flex;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    /* Added to clip the image to the circle */
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.circles div:hover {
+    background-color: rgb(125, 80, 80);
+    transform: scale(1.1);
+    transition: all 0.3s ease-in-out;
+}
+.circle-back{
+    background-color: rgb(139, 139, 87);
+}
+
+/* New style for the image inside the circle */
+.circles div img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    border-radius: 50%; /* This is important to make the image itself circular */
+}
+

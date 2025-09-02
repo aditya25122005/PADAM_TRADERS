@@ -1,0 +1,178 @@
+/* New Color Palette:
+   Primary Gold: #FFC72C
+   Dark Brown: #4F2F27
+   Green Accent: #2C4F2F
+   Text Cream: #F5F5DC
+*/
+
+/* Product Items Section */
+.items {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    background-color: #4F2F27; /* Rich dark brown */
+    height: 400px;
+    align-items: center;
+}
+
+.items div {
+    height: 300px;
+    width: 300px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #FFC72C; /* Vibrant golden yellow */
+    border-radius: 50%;
+    padding-top: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s;
+}
+
+.items div:hover {
+    transform: scale(1.05);
+}
+
+.items img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Page Headers */
+#pro_head_div {
+    display: flex;
+    background-color: #FFC72C; /* Golden yellow */
+    height: 50px;
+    color: #4F2F27; /* Dark brown text */
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+}
+
+#info-h1 {
+    height: 50px;
+    width: 100%;
+    background-color: #4F2F27; /* Dark brown background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #F5F5DC; /* Creamy text color */
+    font-size: 2rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+}
+
+/* Process Section */
+.mainProcess {
+    height: 400px;
+    width: 100%;
+    background-color: #d9e2d5; /* Muted brown for the section background */
+}
+
+.process {
+    padding-top: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 70px;
+}
+
+.p1 {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    overflow: visible;
+    flex-direction: column;
+}
+
+.p1 span {
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: #4F2F27; /* Dark brown text for better contrast */
+    text-align: center;
+    margin-top: 10px;
+}
+
+.pheading {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    padding-top: 30px;
+    color: #0a0a0a; /* Golden yellow heading */
+    font-size: 2rem;
+    font-weight: 800;
+    font-family:monospace;
+}
+
+.process img {
+    max-width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+/* Nutritional Info Section */
+#header-n {
+    display: flex;
+    color: #ffffff; /* Dark brown text */
+    justify-content: center;
+    padding: 10px 0;
+    background: linear-gradient(90deg, #222221, #0c0c0c); /* Cream to Gold gradient */
+    font-family: 'Poppins', sans-serif;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nut-info {
+    background: linear-gradient(145deg, #b4eb6f, #81cc63); /* Earthy green-brown gradient */
+    font-size: 10px;
+    color: #333;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 40px 20px;
+    border-radius: 0px;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Cards with Glass Effect */
+.n1, .n2 {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 30px;
+    width: 45%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover Animation */
+.n1:hover, .n2:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Text Styling */
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #4F2F27; /* Dark brown for text */
+}
+
+li {
+    margin-bottom: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+}

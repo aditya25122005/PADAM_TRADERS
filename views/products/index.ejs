@@ -1,0 +1,93 @@
+<% layout('layouts/boilerplate') %>
+<%- include('../partials/navbar') %> 
+<%- include('../partials/flash') %>
+
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4" style="color:#DAA520;">Our Premium Mustard Oil Products</h1>
+        <p class="lead text-muted">Pure, Healthy, and Fresh Mustard Oil for Your Kitchen</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <% for(let item of products){ %>
+            <div class="col">
+                <div class="card h-100 shadow-lg" style="background: #FFF9E5; border-radius: 15px; border: 2px solid #FFC107;">
+                    <div class="bg-light d-flex align-items-center justify-content-center p-2" 
+                    style="border-radius:10px; width:100%;">
+                        <img src="<%= item.img %>" 
+                        alt="<%= item.name %>" 
+                        class="img-fluid" 
+                        style="object-fit:contain; max-height:100%; max-width:100%;">
+                    </div>
+                    
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title mb-0" style="color:#228B22;"><%= item.name %></h5>
+                            <div class="d-flex align-items-center">
+                                <span class="btn like-btn me-2" product-id="<%= item._id %>">
+                                    <% if(currentUser && currentUser.wishlist && currentUser.wishlist.includes(item._id.toString())) { %>
+                                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                                    <% } else { %>
+                                        <i class="fa-regular fa-heart" style="color: #ff0000;"></i>
+                                    <% } %>
+                                </span>
+                                <form action="/product/<%= item._id %>?_method=DELETE" method="POST" class="m-0">
+                                    <button class="btn btn-danger rounded-circle d-flex align-items-center justify-content-center" 
+                                            style="width: 35px; height: 35px; padding: 0; background:#FF8C00; border:none;">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <% if(item.avgRating > 0) { %>
+                                <span class="badge rounded-pill bg-success fw-normal">
+                                    <i class="fas fa-star me-1"></i><%= item.avgRating %>
+                                </span>
+                            <% } else { %>
+                                <span class="badge rounded-pill bg-secondary fw-normal">No Reviews Yet</span>
+                            <% } %>
+                        </div>
+                        
+                        <p class="card-text mb-1"><strong>Price:</strong> ₹<%= item.price %></p>
+                        <p class="card-text mb-1"><strong>Quantity:</strong> <%= item.quantity %></p>
+                        <p class="card-text mb-2"><strong>Stock:</strong> <%= item.stock %> available</p>
+                        <p class="card-text text-muted mb-4"><%= item.desc %></p>
+
+                        <div class="mt-auto d-flex justify-content-between gap-2">
+                            <a href="/products/<%= item._id %>" class="btn btn-outline-primary btn-sm flex-fill" style="background:#FFD700; color:#000; border:none;">View</a>
+                            <a href="/cart/add/<%= item._id %>" class="btn btn-success btn-sm flex-fill" style="background:#228B22; border:none;">Add to Cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<style>
+    body {
+        background: #FFFDE7;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        transition: 0.3s;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    }
+    .card-title {
+        font-weight: 700;
+    }
+    .btn-sm {
+        font-weight: 600;
+    }
+    /* Add subtle hover effect for buttons */
+    .btn-sm:hover {
+        transform: scale(1.05);
+        transition: transform 0.2s ease-in-out;
+    }
+</style>
+
+<%- include('../partials/footer') %>
+
+<script src="/js/common.js"></script>

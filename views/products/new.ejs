@@ -1,0 +1,56 @@
+<% layout('layouts/boilerplate') %>
+
+<%- include('../partials/navbar') %>
+ <%- include('../partials/flash') %>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm rounded-3">
+                <div class="card-header text-center py-3" style="background-color: #f7d14d;">
+                    <h4 class="mb-0" style="color: #4b3832;">Add a New Mustard Oil Product</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/products" method="post">
+                        <div class="mb-3">
+                            <label for="name" class="form-label" style="color: #4b3832;">Product Name</label>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="e.g., Cold-Pressed Mustard Oil" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="image" class="form-label" style="color: #4b3832;">Image URL</label>
+                            <input type="text" class="form-control" name="img" id="image" placeholder="Paste the image URL here" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="paisa" class="form-label" style="color: #4b3832;">Price (₹)</label>
+                            <input type="number" class="form-control" name="price" id="paisa" placeholder="e.g., 280" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="quantity" class="form-label" style="color: #4b3832;">Quantity</label>
+                            <input type="text" class="form-control" name="quantity" id="quantity" placeholder="e.g., 1 L" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="desc" class="form-label" style="color: #4b3832;">Description</label>
+                            <textarea class="form-control" name="desc" id="desc" rows="3" placeholder="Add a short description here..." required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="stock" class="form-label" style="color: #4b3223;">Stock</label>
+                            <input type="number" class="form-control" name="stock" id="stock" placeholder="e.g., 50" required>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button class="btn" type="submit" style="background-color: #5d9d4a; color: white;">
+                                Add Product
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer')%>
