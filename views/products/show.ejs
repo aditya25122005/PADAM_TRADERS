@@ -35,12 +35,14 @@
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3 class="mb-0" style="color:#228B22;">₹<%= foundProduct.price %></h3>
+                        <% if(currentUser && currentUser.role==='seller' && foundProduct.author && foundProduct.author.equals(currentUser._id)){ %>
                         <a href="/products/<%= foundProduct._id %>/edit" class="btn btn-warning rounded-circle" style="background:#FF8C00; border:none; width:40px; height:40px; display:flex; justify-content:center; align-items:center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.69a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                             </svg>
                         </a>
+                        <% } %>
                     </div>
                     
                     <p><strong>Quantity:</strong> <%= foundProduct.quantity %></p>
@@ -56,14 +58,18 @@
                     </p>
                     <p class="text-muted mb-4"><%= foundProduct.desc %></p>
 
-                    <div class="d-flex justify-content-between gap-2">
-                        <a href="#" class="btn btn-warning btn-lg flex-fill" style="background:#FF8C00; border:none; color:#fff;">Buy Now</a>
-                        <% if(foundProduct.stock > 0) { %>
-                            <a href="/cart/add/<%= foundProduct._id %>" class="btn btn-success btn-lg flex-fill" style="background:#228B22; border:none;">Add to Cart</a>
-                        <% } else { %>
-                            <button class="btn btn-secondary btn-lg flex-fill" disabled>Out of Stock</button>
-                        <% } %>
-                    </div>
+                   <div class="d-flex justify-content-between gap-2">
+                    <a href="#" class="btn btn-warning btn-lg flex-fill" style="background:#FF8C00; border:none; color:#fff;">Buy Now</a>
+                    <% if(foundProduct.stock > 0) { %>
+                        <form action="/user/<%= foundProduct._id %>/add" method="post" class="flex-fill">
+                            <button type="submit" class="btn btn-success btn-lg w-100" style="background:#228B22; border:none;">
+                                Add to Cart
+                            </button>
+                        </form>
+                    <% } else { %>
+                        <button class="btn btn-secondary btn-lg flex-fill" disabled>Out of Stock</button>
+                    <% } %>
+                </div>
                 </div>
             </div>
         </div>

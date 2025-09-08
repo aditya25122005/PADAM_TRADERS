@@ -1,12 +1,11 @@
 const express= require('express');
 const Product= require('../models/Product');
-const { isLoggedIn } = require('../middleware');
+const { isLoggedIn, validateProduct, isSeller, isProductAuthor } = require('../middleware');
 const User = require('../models/User');
 
 const router=express.Router();
 
-// to Show All the Products
-
+// to show all the products
 router.get('/products',isLoggedIn,async(req,res)=>{
     try{
     let products=await Product.find({}).populate('reviews');
@@ -21,11 +20,13 @@ router.get('/products',isLoggedIn,async(req,res)=>{
     }
 })
 // to show a form to add a new product
-router.get('/products/new',isLoggedIn,async(req,res)=>{
+router.get('/products/new',isLoggedIn,isSeller,async(req,res)=>{
     try{
         res.render('products/new');
     }
     catch(e){
+        console.log("Error in adding");
+        
         res.status(404).send("Error In Adding New Product");
         res.redirect('/products');
     }
@@ -33,14 +34,16 @@ router.get('/products/new',isLoggedIn,async(req,res)=>{
 
 // to actually add a product in DB
 
-router.post('/products',isLoggedIn,async(req,res)=>{
+router.post('/products',isLoggedIn,isSeller,validateProduct,async(req,res)=>{
     try{
         let{name,img,stock,quantity,price,desc}=req.body;
-        await Product.create({name,img,stock,quantity,price,desc})
+        await Product.create({name,img,stock,quantity,price,desc, author:req.user._id})
+       
         req.flash('success','Product added successfully')
         res.redirect('/products');
     }
     catch(err){
+        console.log(err);
         res.status(404).send("cannot Add new Product");
     }
     
@@ -62,6 +65,7 @@ router.get('/products/:id', isLoggedIn, async (req, res) => {
     try {
         let { id } = req.params;
         let foundProduct = await Product.findById(id)
+        .populate('author')
             .populate({
                 path: 'reviews',
                 populate: {
@@ -79,7 +83,7 @@ router.get('/products/:id', isLoggedIn, async (req, res) => {
 
 // form to edit the product
 
-router.get('/products/:id/edit',isLoggedIn,async(req,res)=>{
+router.get('/products/:id/edit',isLoggedIn,isSeller,isProductAuthor,async(req,res)=>{
     try{
         let {id}= req.params;
         let foundProduct= await Product.findById(id);
@@ -91,7 +95,7 @@ router.get('/products/:id/edit',isLoggedIn,async(req,res)=>{
 })
 
 // actually edit in DB
-router.patch('/products/:id',isLoggedIn,async(req,res)=>{
+router.patch('/products/:id',isLoggedIn,isSeller,isProductAuthor,validateProduct,async(req,res)=>{
     try{
         let {id}= req.params;
         let{name,img,quantity,price,desc,stock}=req.body;
@@ -105,7 +109,7 @@ router.patch('/products/:id',isLoggedIn,async(req,res)=>{
 })
 
 // delete a product
-router.delete('/product/:id',isLoggedIn,async(req,res)=>{
+router.delete('/product/:id',isLoggedIn,isSeller,isProductAuthor,async(req,res)=>{
     try{
         let {id}= req.params;
         //const product= await Product.findById(id);
@@ -118,6 +122,32 @@ router.delete('/product/:id',isLoggedIn,async(req,res)=>{
         res.status(404).send("Error In Deleting Product");
     }
 })
+
+
+// A route to handle liking and unliking a product
+router.post('/products/:id/like', isLoggedIn, async (req, res) => {
+    try {
+        let { id } = req.params;
+        const product = await Product.findById(id);
+        const user = req.user;
+
+        // Check if the user has already liked the product
+        const isLiked = user.wishlist.includes(product._id);
+
+        if (isLiked) {
+            // Remove the product from the wishlist
+            await User.findByIdAndUpdate(user._id, { $pull: { wishlist: product._id } });
+        } else {
+            // Add the product to the wishlist
+            await User.findByIdAndUpdate(user._id, { $push: { wishlist: product._id } });
+        }
+
+        res.status(200).send('Wishlist updated successfully');
+    } catch (e) {
+        console.error('Error updating wishlist:', e);
+        res.status(500).send('Server Error');
+    }
+});
 
 
 

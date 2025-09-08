@@ -16,7 +16,8 @@ const authRoutes = require('./routes/auth.js');
 const homeRoutes = require('./routes/root.js');
 const contactRoutes=require('./routes/contact.js');
 const reviewRoutes = require('./routes/review.js');
-
+const cartRoutes= require('./routes/cart.js');
+const{setUser}=require('./middleware');
 mongoose.connect('mongodb://127.0.0.1:27017/padam')
     .then(() => {
         console.log("DB Connected Successfully");
@@ -44,6 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(setUser);
 
 // Core middleware and services
 app.use(session(configSession));
@@ -63,6 +65,10 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+  res.locals.user = req.user;  // this makes `user` available in all views
+  next();
+});
 // Your routes
 app.use(productRoutes);
 app.use(authRoutes);
@@ -70,6 +76,7 @@ app.use(homeRoutes);
 app.use(reviewRoutes);
 app.use(productApi);
 app.use(contactRoutes);
+app.use(cartRoutes);
 
 app.get('/about-login', (req, res) => {
     res.render('about-login.ejs');

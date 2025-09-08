@@ -2,7 +2,7 @@ const express= require('express');
 const Product= require('../models/Product');
 const Review= require('../models/Review');
 const router= express.Router();
-const {isLoggedIn}=require('../middleware');
+const {isLoggedIn, validateReview}=require('../middleware');
 
 
 router.post('/products/:id/review',isLoggedIn,async(req,res)=>{

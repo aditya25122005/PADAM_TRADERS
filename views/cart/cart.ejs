@@ -1,0 +1,204 @@
+<% layout('layouts/boilerplate') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<!-- Back Button -->
+<a href="/products" class="btn btn-light mb-3">
+    <i class="fas fa-arrow-left me-2"></i>Back to Products
+</a>
+
+<div class="container py-5">
+    <h3 class="mb-5 text-center fw-bold">
+        <i class="fas fa-shopping-cart me-2"></i>Your Cart
+    </h3>
+
+    <% if(user.cart.length > 0) { 
+        let total = 0;
+        user.cart.forEach(product => { total += product.price; });
+    %>
+    <div class="card-list">
+        <% user.cart.forEach(product => { %>
+        <div class="card mb-4 shadow-sm border-0 rounded-4 cart-item-card">
+            <div class="row g-0 align-items-center">
+                <div class="col-4 col-md-3">
+                    <img src="<%= product.img %>" class="cart-item-img rounded-start-4" alt="<%= product.name %>">
+                </div>
+                <div class="col-8 col-md-9">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-semibold text-truncate mb-1"><%= product.name %></h5>
+                        <p class="card-text text-muted small mb-2"><%= product.desc ? product.desc.substring(0, 60) : '' %>...</p>
+                        <span class="fw-bold fs-5 text-success mb-3">₹<%= product.price %></span>
+                        
+                        <div class="d-flex justify-content-end gap-2 mt-auto">
+                            <a href="/products/<%= product._id %>" class="btn btn-sm btn-outline-primary flex-grow-1">
+                                <i class="fas fa-eye me-1"></i>View
+                            </a>
+                            <form action="/user/<%= product._id %>/remove?_method=DELETE" method="post" class="d-inline flex-grow-1">
+                                <button type="submit" class="btn btn-sm btn-outline-danger w-100">
+                                    <i class="fas fa-trash me-1"></i>Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+
+    <div class="card shadow border-0 rounded-4 mt-5 checkout-card">
+        <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center p-4">
+            <h4 class="mb-3 mb-md-0">Total: 
+                <span class="fw-bold text-success">₹<%= total %></span>
+            </h4>
+            <a href="/checkout" class="btn btn-lg btn-success rounded-pill shadow-sm px-4">
+                <i class="fas fa-credit-card me-2"></i>Proceed to Checkout
+            </a>
+        </div>
+    </div>
+
+    <% } else { %>
+    <div class="text-center py-5">
+        <i class="fas fa-box-open fa-4x text-secondary mb-3"></i>
+        <p class="text-muted fs-5 mb-3">Your cart is empty.</p>
+        <a href="/products" class="btn btn-lg btn-primary rounded-pill shadow-sm px-4">
+            <i class="fas fa-shopping-bag me-2"></i>Start Shopping
+        </a>
+    </div>
+    <% } %>
+</div>
+
+<%- include('../partials/footer') %>
+
+<style>
+    body {
+        background-color: #fffdf6; /* off-white natural background */
+        font-family: 'Poppins', sans-serif;
+        color: #3a3a3a;
+    }
+
+    h3, h4, .fw-bold {
+        font-family: 'Merriweather', serif;
+        color: #5c3d2e; /* earthy brown */
+    }
+
+    /* Cart item card */
+    .cart-item-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #f4c54255;
+        background: #fffdf6;
+    }
+
+    .cart-item-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 18px rgba(92, 61, 46, 0.15) !important;
+    }
+
+    .cart-item-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-left: 5px solid #f4c542; /* mustard accent */
+    }
+
+    /* Price */
+    .fs-5.text-success {
+        color: #3a5a40 !important; /* earthy green */
+    }
+
+    /* Back button */
+    .btn-light {
+        background-color: #f4c542;
+        color: #5c3d2e;
+        border: none;
+        font-weight: 500;
+        border-radius: 50px;
+        padding: 8px 16px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-light:hover {
+        background-color: #e0af2f;
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(244, 197, 66, 0.4);
+    }
+
+    /* View button */
+    .btn-outline-primary {
+        border: 2px solid #3a5a40;
+        color: #3a5a40;
+        font-weight: 500;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #3a5a40;
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(58, 90, 64, 0.3);
+    }
+
+    /* Remove button */
+    .btn-outline-danger {
+        border: 2px solid #a63c3c;
+        color: #a63c3c;
+        font-weight: 500;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #a63c3c;
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(166, 60, 60, 0.3);
+    }
+
+    /* Checkout button */
+    .btn-success {
+        background-color: #3a5a40;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    .btn-success:hover {
+        background-color: #2c4430;
+        box-shadow: 0 4px 10px rgba(58, 90, 64, 0.3);
+    }
+
+    /* Start Shopping button */
+    .btn-primary {
+        background-color: #f4c542;
+        border: none;
+        color: #5c3d2e;
+        font-weight: 600;
+        border-radius: 50px;
+    }
+
+    .btn-primary:hover {
+        background-color: #e0af2f;
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(244, 197, 66, 0.4);
+    }
+
+    /* Checkout card */
+    .checkout-card {
+        background-color: #fffbe9;
+        border: 1px solid #f4c54299;
+    }
+
+    /* Empty cart state */
+    .fa-box-open {
+        color: #f4c542 !important;
+    }
+
+    .text-muted {
+        color: #5c3d2e99 !important;
+    }
+
+    /* Equal button widths inside cards */
+    .cart-item-card .btn {
+        min-width: 100px;
+        padding: 6px 12px;
+    }
+</style>

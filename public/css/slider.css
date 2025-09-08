@@ -96,8 +96,8 @@ nav {
     color: wheat;
     font-family: 'Times New Roman', Times, serif;
     font-size: 20px;
-    height: 400px;
-    width: 400px;
+    height: 300px;
+    width: 300px;
     border :7px solid red;
     display: flex;
     border-radius: 50%;

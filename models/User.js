@@ -13,6 +13,17 @@ const userSchema=new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
     },
+    ],
+    role:{
+        type:String,
+        required:true
+    },
+    
+    cart:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Product'
+        }
     ]
 })
 userSchema.plugin(passportLocalMongoose);
