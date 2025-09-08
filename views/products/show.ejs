@@ -158,9 +158,11 @@
                                     <% } %>
                                 </div>
                                 <p class="mb-2"><%= review.comment %></p>
+                                 <% if (currentUser && review.author && review.author.equals(currentUser._id)) { %>
                                 <form action="/products/<%= foundProduct._id %>/review/<%= review._id %>?_method=DELETE" method="POST">
                                     <button class="btn btn-danger btn-sm" style="background:#FF8C00; border:none;">Delete</button>
                                 </form>
+                                <% }%>
                             </div>
                         </div>
                     <% } %>

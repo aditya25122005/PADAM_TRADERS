@@ -2,7 +2,7 @@ const express= require('express');
 const Product= require('../models/Product');
 const Review= require('../models/Review');
 const router= express.Router();
-const {isLoggedIn, validateReview}=require('../middleware');
+const {isLoggedIn, validateReview, isReviewAuthor}=require('../middleware');
 
 
 router.post('/products/:id/review',isLoggedIn,async(req,res)=>{
@@ -34,7 +34,7 @@ router.post('/products/:id/review',isLoggedIn,async(req,res)=>{
 
 // To Delete a review
 
-router.delete('/products/:productID/review/:reviewID',isLoggedIn,async(req,res)=>{
+router.delete('/products/:productID/review/:reviewID',isLoggedIn,isReviewAuthor,async(req,res)=>{
     try{
         const {productID,reviewID}= req.params;
         // remove the reference of review from Product

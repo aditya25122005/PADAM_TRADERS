@@ -6,6 +6,7 @@
 // }
 const Product = require('./models/Product'); 
 const { reviewSchema, productSchema } = require("./schema");
+const Review = require('./models/Review');
 
 // module.exports={isLoggedIn};
 const validateProduct = (req, res, next) => {
@@ -18,14 +19,15 @@ const validateProduct = (req, res, next) => {
     next();
 };
 
-const validateReview=(req,res,next)=>{
-    let{rating,comment}=req.body;
-    const{error}=reviewSchema.validate({rating,comment})
-    if(error){
-        return res.render('error');
+const validateReview = (req, res, next) => {
+    let { rating, comment } = req.body;
+    const { error } = reviewSchema.validate({ rating, comment });
+    if (error) {
+        // Pass the Joi error message to the error page
+        return res.render('error', { error: error.details[0].message });
     }
     next();
-}
+};
 
 const isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
@@ -83,9 +85,35 @@ const isProductAuthor=async(req,res,next)=>{
     next();
 }
 
+const isReviewAuthor = async (req, res, next) => {
+    const { productID, reviewID } = req.params;
+
+    try {
+        const review = await Review.findById(reviewID);
+
+        // Check if the review exists AND if it has an author field
+        if (review && review.author) {
+            // Now, and only now, safely check for ownership
+            if (review.author.equals(req.user._id)) {
+                return next();
+            }
+        }
+
+        // If either check fails, redirect with an error
+        req.flash('error', "You do not have permission to do that.");
+        res.redirect(`/products/${productID}`);
+
+    } catch (e) {
+        // Catch any other potential errors, like an invalid reviewId format
+        req.flash('error', "An unexpected error occurred.");
+        res.redirect(`/products/${productID}`);
+    }
+};
+
+
 function setUser(req, res, next) {
     res.locals.user = req.user || null; // Passport sets req.user after login
     next();
 }
 
-module.exports = { isLoggedIn,setUser,validateProduct,validateReview,isSeller,isProductAuthor};
+module.exports = { isLoggedIn,setUser,validateProduct,validateReview,isSeller,isProductAuthor, isReviewAuthor};
