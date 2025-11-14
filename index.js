@@ -45,13 +45,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use(setUser);
+
 
 // Core middleware and services
 app.use(session(configSession));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash()); // Flash middleware should be after session and passport
+app.use(setUser);
 // Passport configuration
 passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
@@ -85,12 +86,12 @@ app.get('/about-login', (req, res) => {
 app.get('/about',(req,res)=>{
     res.render('about');
 })
-app.get('/contact',(req,res)=>{
-    res.render('contact.ejs');
-})
+// app.get('/contact',(req,res)=>{
+//     res.render('contact.ejs');
+// })
 
 
 // seedDB();
-app.listen(8080, () => {
+app.listen(8085, () => {
     console.log("Server Connected At Port 8080");
 });

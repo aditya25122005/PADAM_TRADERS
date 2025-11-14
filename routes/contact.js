@@ -1,14 +1,15 @@
 const express= require('express');
 const Message = require('../models/Message');
+const { isLoggedIn } = require('../middleware');
 const router= express.Router();
 
 
-router.get("/contact",(req,res)=>{
+router.get("/contact",isLoggedIn, (req,res)=>{
     res.render('contact');
 })
 
 
-router.post("/contact",async(req,res)=>{
+router.post("/contact",isLoggedIn,async(req,res)=>{
     try{    
         const{name, email, contactNo, message}= req.body;
         const userId = req.user ? req.user._id : null;
