@@ -24,21 +24,31 @@
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h5 class="card-title mb-0" style="color:#228B22;"><%= item.name %></h5>
                             <div class="d-flex align-items-center">
-                                 <span class="btn like-btn me-2" product-id="<%= item._id %>">
+
+                                <!-- WISHLIST BUTTON -->
+                                <span class="btn like-btn me-2" product-id="<%= item._id %>">
                                     <% if(currentUser && currentUser.wishlist && currentUser.wishlist.includes(item._id.toString())) { %>
                                         <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
                                     <% } else { %>
                                         <i class="fa-regular fa-heart" style="color: #ff0000;"></i>
                                     <% } %>
                                 </span>
-                                 <% if(currentUser && currentUser.role==='seller' && item.author && item.author.equals(currentUser._id)){ %>
+
+                                <!-- DELETE BUTTON -->
+                                <% 
+                                    let isOwner = currentUser && item.author && item.author.equals(currentUser._id);
+                                    let isAdmin = currentUser && currentUser.role === 'Admin';
+                                %>
+
+                                <% if (isOwner || isAdmin) { %>
                                 <form action="/product/<%= item._id %>?_method=DELETE" method="POST" class="m-0">
                                     <button class="btn btn-danger rounded-circle d-flex align-items-center justify-content-center" 
                                             style="width: 35px; height: 35px; padding: 0; background:#FF8C00; border:none;">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
-                                 <% } %>
+                                <% } %>
+
                             </div>
                         </div>
                         
@@ -58,15 +68,16 @@
                         <p class="card-text text-muted mb-4"><%= item.desc %></p>
 
                         <div class="mt-auto d-flex justify-content-between">
-    <a href="/products/<%= item._id %>" class="btn btn-outline-primary btn-sm flex-fill me-2" style="background:#FFD700; color:#000; border:none;">
-        View
-    </a>
-    <form action="/user/<%= item._id %>/add" method="post" class="flex-fill">
-        <button type="submit" class="btn btn-success btn-sm w-100" style="background:#228B22">
-            <i class="fas fa-cart-plus me-2"></i>Add to Cart
-        </button>
-    </form>
-</div>
+                            <a href="/products/<%= item._id %>" class="btn btn-outline-primary btn-sm flex-fill me-2" style="background:#FFD700; color:#000; border:none;">
+                                View
+                            </a>
+                            <form action="/user/<%= item._id %>/add" method="post" class="flex-fill">
+                                <button type="submit" class="btn btn-success btn-sm w-100" style="background:#228B22">
+                                    <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                                </button>
+                            </form>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -89,7 +100,6 @@
     .btn-sm {
         font-weight: 600;
     }
-    /* Add subtle hover effect for buttons */
     .btn-sm:hover {
         transform: scale(1.05);
         transition: transform 0.2s ease-in-out;

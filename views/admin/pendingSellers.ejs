@@ -1,0 +1,42 @@
+<% layout('layouts/boilerplate') %>
+<%- include('../partials/navbar') %>
+
+<div class="container my-5">
+
+  <h1 class="fw-bold mb-4 text-center" style="color:#DAA520;">Pending Seller Applications</h1>
+
+  <% if (pending.length === 0) { %>
+    <p class="text-center text-muted">No pending applications.</p>
+  <% } else { %>
+    <table class="table table-hover shadow">
+      <thead class="table-dark">
+        <tr>
+          <th>User</th>
+          <th>Email</th>
+          <th>Applied At</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pending.forEach(u => { %>
+          <tr>
+            <td><%= u.username %></td>
+            <td><%= u.email %></td>
+            <td><%= u.sellerAppliedAt ? u.sellerAppliedAt.toLocaleString() : '-' %></td>
+            <td>
+              <form action="/admin/pending-sellers/<%= u._id %>/approve" method="POST" class="d-inline">
+                <button class="btn btn-success btn-sm">Approve</button>
+              </form>
+
+              <form action="/admin/pending-sellers/<%= u._id %>/reject" method="POST" class="d-inline">
+                <button class="btn btn-danger btn-sm">Reject</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<%- include('../partials/home_footer.ejs') %>

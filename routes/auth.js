@@ -1,94 +1,88 @@
-const express= require('express');
+const express = require('express');
 const User = require('../models/User');
 const passport = require('passport');
 
+const router = express.Router();
 
-const router= express.Router();
+// Show registration form
+router.get('/register', (req, res) => {
+    res.render('auth/signup');
+});
 
-// to show the form for register
+// register user
+router.post('/register', async (req, res, next) => {
+    try {
+        const { email, username, password, applySeller } = req.body;
 
-router.get('/register',(req,res)=>{
-    res.render('auth/signup')
-})
+        // ALWAYS enforce Buyer role at registration
+        const user = new User({
+            email,
+            username,
+            role: "Buyer",        
+            sellerStatus: "none"    
+        });
 
-// to actually register
-
-router.post('/register',async(req,res)=>{
-    try{
-    let{email,username, password,role}= req.body;
-    const user= new User({email,username,role});
-    const newUser= await User.register(user,password);
-
-    req.login(newUser,function(err){
-        if(err){
-            return next(err);
+        
+        if (applySeller) {
+            user.sellerStatus = "pending";
+            user.sellerAppliedAt = Date.now();
         }
-        req.flash('success','Welcome To PADAM Traders')
-        return res.redirect('/products');
-    })
-}
-catch(err){
-    req.flash('error',e.message);
-    return res.redirect('/signup');
-}
-})
 
-// to get Login form
+        const newUser = await User.register(user, password);
 
-router.get('/login',(req,res)=>{
+        // Auto-login after registration
+        req.login(newUser, function (err) {
+            if (err) return next(err);
+
+            req.flash(
+                'success',
+                applySeller
+                    ? 'Account created! Seller application submitted for approval.'
+                    : 'Welcome to PADAM Traders!'
+            );
+
+            return res.redirect('/products');
+        });
+
+    } catch (e) {
+        console.log(e);
+        req.flash('error', e.message || 'Registration failed');
+        return res.redirect('/register');
+    }
+});
+
+// Show Login Page
+router.get('/login', (req, res) => {
     res.render('auth/login');
-})
+});
 
-// to actually Login via DB
+// Login
 router.post('/login',
-    passport.authenticate('local',{
-        failureRedirect:'/login',
-        failureMessage:true
+    passport.authenticate('local', {
+        failureRedirect: '/login',
+        failureFlash: true
     }),
-    (req,res)=>{
-         req.flash('success','Welcome back to PADAM Traders');
+    (req, res) => {
+        req.flash('success', 'Welcome back to PADAM Traders!');
         res.redirect('/products');
-
-    })
-
-// // logout
-// router.get('/logout', (req, res, next) => {
-//     req.logout((err) => {
-//         if (err) {
-//             return next(err);
-//         }
-//         req.flash('success','Logged Out Successfully!')
-//         res.redirect('/login');
-//     });
-// });
+    }
+);
 
 
-// logout
+    // LOGOUT USER
+
 router.get('/logout', (req, res, next) => {
     req.logout((err) => {
-        if (err) {
-            return next(err);
-        }
-        // Step 1: Set the flash message
+        if (err) return next(err);
+
         req.flash('success', 'Logged Out Successfully!');
-        
-        // Step 2: Manually destroy the session after flashing
+
         req.session.destroy((destroyErr) => {
-            if (destroyErr) {
-                return next(destroyErr);
-            }
-            // Step 3: Redirect the user
+            if (destroyErr) return next(destroyErr);
+
             res.redirect('/login');
         });
     });
 });
+
 module.exports = router;
-
-// router.get('/logout',(req,res)=>{
-//     ()=>{
-//         req.logOut();
-//     }
-//     res.redirect('/login');
-// })
-
-// module.exports=router;

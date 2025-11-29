@@ -17,6 +17,7 @@ const homeRoutes = require('./routes/root.js');
 const contactRoutes=require('./routes/contact.js');
 const reviewRoutes = require('./routes/review.js');
 const cartRoutes= require('./routes/cart.js');
+const adminRoutes = require('./routes/admin');
 const{setUser}=require('./middleware');
 mongoose.connect('mongodb://127.0.0.1:27017/padam')
     .then(() => {
@@ -78,6 +79,8 @@ app.use(reviewRoutes);
 app.use(productApi);
 app.use(contactRoutes);
 app.use(cartRoutes);
+app.use(adminRoutes);
+app.use(require('./routes/admin'));
 
 app.get('/about-login', (req, res) => {
     res.render('about-login.ejs');
@@ -93,5 +96,5 @@ app.get('/about',(req,res)=>{
 
 // seedDB();
 app.listen(8085, () => {
-    console.log("Server Connected At Port 8080");
+    console.log("Server Connected At Port 8085");
 });

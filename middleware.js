@@ -1,16 +1,11 @@
-// const isLoggedIn=(req,res,next)=>{
-//     if(!req.isAuthenticated()){
-//         return res.redirect('/login');
-//     }
-//     next();
-// }
 const Product = require('./models/Product'); 
 const { reviewSchema, productSchema } = require("./schema");
 const Review = require('./models/Review');
 
-// module.exports={isLoggedIn};
+/* =====================================================
+   PRODUCT VALIDATION
+===================================================== */
 const validateProduct = (req, res, next) => {
-    // Destructure all required fields from the request body
     let { name, img, price, desc, quantity, stock } = req.body;
     const { error } = productSchema.validate({ name, img, price, desc, quantity, stock });
     if (error) {
@@ -19,16 +14,21 @@ const validateProduct = (req, res, next) => {
     next();
 };
 
+/* =====================================================
+   REVIEW VALIDATION
+===================================================== */
 const validateReview = (req, res, next) => {
     let { rating, comment } = req.body;
     const { error } = reviewSchema.validate({ rating, comment });
     if (error) {
-        // Pass the Joi error message to the error page
         return res.render('error', { error: error.details[0].message });
     }
     next();
 };
 
+/* =====================================================
+   LOGIN CHECK
+===================================================== */
 const isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.flash('error','Please Login First');
@@ -37,83 +37,125 @@ const isLoggedIn = (req, res, next) => {
    return next();
 };
 
-
-
-// const isSeller=(req,res,next)=>{
-//     if(!req.user){
-//         req.flash('error',"You don't have access");
-//         return res.redirect('/login');
-//     }
-//     if(req.user.role !=='seller'){
-//         req.flash('error',"You don't have access");
-//         return res.redirect('/products');
-//     }
-//     next();
-// }
-
+/* =====================================================
+   SELLER CHECK (UPDATED & SECURE)
+===================================================== */
 
 const isSeller = (req, res, next) => {
-    // Check if user logged in
     if (!req.user) {
         req.flash('error', "You must be logged in");
         return res.redirect('/login');
     }
-    // Check if role exists
-    if (!req.user.role) {
-        req.flash('error', "Your account has no role assigned. Contact admin.");
-        return res.redirect('/products');
+
+    // ⭐ Admin has all permissions
+    if (req.user.role === "Admin") {
+        return next();
     }
-    // Normalize role check
-    if (req.user.role.toLowerCase() !== 'seller') {
+
+    if (req.user.role !== "Seller") {
         req.flash('error', "You don't have access (not a seller)");
         return res.redirect('/products');
     }
+
+    if (req.user.sellerStatus !== "approved") {
+        req.flash('error', "Your seller account is not approved yet.");
+        return res.redirect('/products');
+    }
+
     next();
 };
 
-const isProductAuthor=async(req,res,next)=>{
-    const {id} = req.params;
-    const product= await Product.findById(id);
-    if(!product){
-        req.flash('error',"product not found");
-        return res.redirect('/products');
-    }
-    if(!product.author.equals(req.user._id)){
-        req.flash('error',"You dont have permission to do that");
-        return res.redirect('/products');
-    }
-    next();
-}
 
+
+/* =====================================================
+   PRODUCT AUTHOR CHECK
+===================================================== */
+const isProductAuthor = async (req, res, next) => {
+    const { id } = req.params;
+    const product = await Product.findById(id).populate('author');
+
+    if (!product) {
+        req.flash('error', "Product not found");
+        return res.redirect('/products');
+    }
+
+    // Admin bypass
+    if (req.user.role === "Admin") {
+        return next();
+    }
+
+    // Compare author IDs properly
+    if (product.author._id.toString() !== req.user._id.toString()) {
+        req.flash('error', "You don't have permission to do that");
+        return res.redirect('/products');
+    }
+
+    next();
+};
+
+/* =====================================================
+   REVIEW AUTHOR CHECK
+===================================================== */
 const isReviewAuthor = async (req, res, next) => {
     const { productID, reviewID } = req.params;
 
     try {
         const review = await Review.findById(reviewID);
 
-        // Check if the review exists AND if it has an author field
-        if (review && review.author) {
-            // Now, and only now, safely check for ownership
-            if (review.author.equals(req.user._id)) {
-                return next();
-            }
+        // If review doesn't exist
+        if (!review) {
+            req.flash("error", "Review not found.");
+            return res.redirect(`/products/${productID}`);
         }
 
-        // If either check fails, redirect with an error
-        req.flash('error', "You do not have permission to do that.");
-        res.redirect(`/products/${productID}`);
+        // If ADMIN → allow deletion of any review
+        if (req.user && req.user.role === "Admin") {
+            return next();
+        }
+
+        // If REVIEW AUTHOR → allow deleting their own review
+        if (review.author && review.author.equals(req.user._id)) {
+            return next();
+        }
+
+        // Otherwise deny
+        req.flash("error", "You do not have permission to delete this review.");
+        return res.redirect(`/products/${productID}`);
 
     } catch (e) {
-        // Catch any other potential errors, like an invalid reviewId format
-        req.flash('error', "An unexpected error occurred.");
-        res.redirect(`/products/${productID}`);
+        req.flash("error", "Unexpected error occurred.");
+        return res.redirect(`/products/${productID}`);
     }
 };
 
+const isAdmin = (req, res, next) => {
+    if (!req.user) {
+        req.flash("error", "Please login first.");
+        return res.redirect("/login");
+    }
+    if (req.user.role !== "Admin") {
+        req.flash("error", "Access denied. Admins only.");
+        return res.redirect("/products");
+    }
+    next();
+};
 
+/* =====================================================
+   SET USER LOCALS
+===================================================== */
 function setUser(req, res, next) {
-    res.locals.user = req.user || null; // Passport sets req.user after login
+    res.locals.user = req.user || null;
+    res.locals.currentUser = req.user || null;  // added
     next();
 }
 
-module.exports = { isLoggedIn,setUser,validateProduct,validateReview,isSeller,isProductAuthor, isReviewAuthor};
+module.exports = { 
+    isLoggedIn,
+    setUser,
+    validateProduct,
+    validateReview,
+    isSeller,
+    isProductAuthor, 
+    isReviewAuthor,
+    isAdmin
+};

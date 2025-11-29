@@ -1,0 +1,39 @@
+<% layout('layouts/boilerplate') %>
+<%- include('../partials/navbar') %>
+
+<div class="container my-5">
+    <h1 class="mb-4 fw-bold text-center" style="color:#DAA520;">Admin Dashboard</h1>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-lg p-4 text-center border-2 border-warning">
+                <h3><i class="bi bi-people-fill text-primary"></i></h3>
+                <h4>Total Users</h4>
+                <p class="display-5 fw-bold"><%= totalUsers %></p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-lg p-4 text-center border-2 border-success">
+                <h3><i class="bi bi-box-seam text-success"></i></h3>
+                <h4>Total Products</h4>
+                <p class="display-5 fw-bold"><%= totalProducts %></p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-lg p-4 text-center border-2 border-danger">
+                <h3><i class="bi bi-hourglass-split text-danger"></i></h3>
+                <h4>Pending Seller Requests</h4>
+                <p class="display-5 fw-bold"><%= pendingSellers %></p>
+
+                <a href="/admin/pending-sellers" class="btn btn-danger mt-3 w-75">Review Now</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<%- include('../partials/home_footer.ejs') %>

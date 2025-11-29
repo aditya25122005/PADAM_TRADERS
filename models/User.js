@@ -14,10 +14,19 @@ const userSchema=new mongoose.Schema({
       ref: "Product",
     },
     ],
-    role:{
-        type:String,
-        required:true
-    },
+    role: {
+    type: String,
+    enum: ['Admin', 'Seller', 'Buyer'],
+    default: 'Buyer'
+  },
+  sellerStatus: {
+    type: String,
+    enum: ['none','pending','approved','rejected'],
+    default: 'none'
+  },
+  // optionally: sellerAppliedAt, sellerApprovedAt
+  sellerAppliedAt: { type: Date },
+  sellerApprovedAt: { type: Date },
     
     cart:[
         {

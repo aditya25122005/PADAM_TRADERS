@@ -1,124 +1,44 @@
 <% layout('layouts/boilerplate') %>
-
 <%- include('partials/homenav') %>
 
+<link rel="stylesheet" href="/css/home_modern.css">
 
-<div class="slideshow-container">
-  <div class="slide fade">
-    <img src="/images/slide1.jpg" alt="Image 1">
+<!-- HERO BANNER -->
+<section class="hero-banner">
+  <div class="hero-overlay"></div>
+  <img src="/images/slide3.jpg" class="hero-image" alt="Mustard oil banner">
+
+  <div class="hero-content">
+    <h1>Pure. Fresh. Authentic Mustard Oil.</h1>
+    <p>From farm to kitchen — the quality you can trust.</p>
+    <a href="#products" class="cta-btn">View Products</a>
   </div>
-  <div class="slide fade">
-    <img src="/images/slide2.jpg" alt="Image 2">
+</section>
+
+<!-- PRODUCT SECTION -->
+<section class="products-section" id="products">
+  <h2 class="section-title">Our Main Products</h2>
+
+  <div class="product-grid">
+
+    <% products.forEach(product => { %>
+
+      <div class="product-card">
+          <img src="<%= product.img %>" alt="<%= product.name %>">
+
+          <h3><%= product.name %></h3>
+
+          <p class="price">₹ <%= product.price %></p>
+
+          <p class="quantity"><%= product.quantity %></p>
+
+          <a href="/products/<%= product._id %>" class="view-btn">View Details</a>
+      </div>
+
+    <% }) %>
+
   </div>
-  <div class="slide fade">
-    <img src="/images/slide3.jpg" alt="Image 3">
-  </div>
-  <div class="slide fade">
-    <img src="/images/slide4.jpg" alt="Image 4">
-  </div>
-  <div class="slide fade">
-    <img src="/images/slide5.png" alt="Image 5">
-  </div>
-
-  <!-- Removed arrows -->
-  <!-- <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
-  <a class="next" onclick="changeSlide(1)">&#10095;</a> -->
-
-  <!-- Removed dots -->
-  <!-- <div class="dots"></div> -->
-</div>
-
-
-
-
-
-
-
-<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-    <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#circles">View Products</a></li>
-        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-        <li class="nav-item"><a class="nav-link" href="/register">Sign Up</a></li>
-    </ul>
-</div>
-
-<div class="circle-back" id="circles" >
-    <h1 class="prod-heading">Our Main Products</h1>
-    <div class="circles">
-        <a href="/login">
-        <div class="c1">
-            <img src="/images/can.png" alt="can" style="object-fit: contain;"> 
-        </div>
-        </a>
-
-        <a href="/login">
-        <div class="c1">
-            <img src="/images/cold_pressed.png" alt="can" style="object-fit: contain;"> 
-        </div>
-        </a>
-        <a href="/login">
-        <div class="c1">
-            <img src="/images/organic_oil.png" alt="can" style="object-fit: contain;"> 
-        </div>
-        </a>
-
-        <a href="/login">
-        <div class="c1">
-            <img src="/images/premium_5l_jar.png" alt="can" style="object-fit: contain;"> 
-        </div>
-        </a>
-    </div>
-
-
-    <div class="circles" >
-        <a href="/login">
-        <div class="c1">
-            <img src="/images/TIN_BLACK.png" alt="can" style="object-fit: contain;"> 
-        </div>
-        </a>
-        <a href="/login">
-        <div class="c1">
-            <img src="/images/TIN_YELLOW.png" alt="can" style="object-fit: contain;"> 
-        </div>
-        </a>
-        <a href="/login">
-        <div class="c1">
-            <img src="/images/premium_black_tin.png" alt="can" style="object-fit: contain;"> 
-        </div>
-        </a>
-        <a href="/login">
-        <div class="c1">
-            <img src="/images/premium_yellow_tin.png" alt="can" style="object-fit: contain;"> 
-        </div>
-        </a>
-    </div>
-</div>
-
-
-
-
-<link rel="stylesheet" href="/css/slider.css">
-<script defer src="/js/slider.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</section>
 
 
 <%- include('partials/home_footer.ejs') %>

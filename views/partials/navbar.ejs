@@ -1,54 +1,86 @@
 <nav class="navbar navbar-expand-lg shadow-sm" style="background-color: #000000;">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="/products" style="color: #e5ff00; font-size: 1.8rem; font-family: 'Montserrat', sans-serif; letter-spacing: 1px;">
+
+    <!-- Brand -->
+    <a class="navbar-brand fw-bold" href="/products"
+       style="color: #e5ff00; font-size: 1.8rem; font-family: 'Montserrat', sans-serif; letter-spacing: 1px;">
       PADAM TRADERS
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" style="border-color: rgba(255, 255, 255, 0.5);">
+
+    <!-- Toggler (Mobile) -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation"
+            style="border-color: rgba(255, 255, 255, 0.5);">
       <span class="navbar-toggler-icon"></span>
     </button>
+
+    <!-- Navbar Items -->
     <div class="collapse navbar-collapse" id="mainNavbar">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-3"> <!-- gap for spacing -->
-        <% if (user) { %>
-    <li class="nav-item d-flex align-items-center">
-      <span class="nav-link disabled" style="color: #fff200; font-weight: 600;">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-3">
+
+        <!-- Greeting -->
         <% if (currentUser) { %>
-    👋 Hello, <%= currentUser.username %>
-<% } %>
-      
-      </span>
-      </li>
-      <% } %>
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/products">Home</a>
+        <li class="nav-item d-flex align-items-center">
+          <span class="nav-link disabled" style="color: #fff200; font-weight: 600;">
+            👋 Hello, <%= currentUser.username %>
+          </span>
         </li>
-        <% if(currentUser && currentUser.role==='seller'){ %>
+        <% } %>
+
+        <!-- Home -->
+        <li class="nav-item">
+          <a class="nav-link" href="/products">Home</a>
+        </li>
+
+        <!-- Admin Panel -->
+        <% if (currentUser && currentUser.role === 'Admin') { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/dashboard">Admin Panel</a>
+        </li>
+        <% } %>
+
+        <!-- Seller Add Product -->
+        <% if (currentUser && currentUser.role === 'Seller') { %>
         <li class="nav-item">
           <a class="nav-link" href="/products/new">Add Product</a>
         </li>
         <% } %>
+
+        <!-- About -->
         <li class="nav-item">
           <a class="nav-link" href="/about-login">About Us</a>
         </li>
+
+        <!-- Contact -->
         <li class="nav-item">
           <a class="nav-link" href="/contact">Contact</a>
         </li>
+
+        <!-- Cart -->
         <li class="nav-item">
           <a class="nav-link position-relative" href="/user/cart">
             <i class="bi bi-cart-fill"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background-color: #ff6347; font-size: 0.7rem; padding: 4px 6px;">
-              <%=currentUser.cart.length%>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill"
+                  style="background-color: #ff6347; font-size: 0.7rem; padding: 4px 6px;">
+              <%= currentUser ? currentUser.cart.length : 0 %>
               <span class="visually-hidden">cart items</span>
             </span>
           </a>
         </li>
+
+        <!-- Logout -->
+        <% if (currentUser) { %>
         <li class="nav-item">
-          <a class="nav-link logout-btn" href="/">Logout</a>
+          <a class="nav-link logout-btn" href="/logout">Logout</a>
         </li>
+        <% } %>
+
       </ul>
     </div>
   </div>
 </nav>
 
+<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
@@ -62,19 +94,19 @@
 
   .nav-link {
     font-weight: 500;
-    font-size: 1.1rem; /* bigger text */
+    font-size: 1.1rem;
     color: #d4d4d4 !important;
     position: relative;
-    padding: 0.6rem 0.8rem; /* better spacing */
+    padding: 0.6rem 0.8rem;
     transition: color 0.3s ease, transform 0.2s ease;
   }
 
   .nav-link:hover {
     color: #fff200 !important;
-    transform: scale(1.05); /* slight zoom on hover */
+    transform: scale(1.05);
   }
 
-  /* underline hover effect */
+  /* Underline animation */
   .nav-item .nav-link::after {
     content: '';
     position: absolute;
@@ -91,17 +123,18 @@
     width: 60%;
   }
 
-  /* active link */
+  /* Active state */
   .nav-link.active {
     color: #ff6347 !important;
     font-weight: 700;
   }
+
   .nav-link.active::after {
     width: 60%;
     background-color: #ff6347;
   }
 
-  /* Logout button special look */
+  /* Logout button */
   .logout-btn {
     color: #ffffff !important;
     background: #ff4500;

@@ -1,0 +1,37 @@
+<% layout('layouts/boilerplate') %>
+<%- include('../partials/navbar') %>
+
+<div class="container my-4">
+    <h1 class="text-center mb-4 fw-bold" style="color:#DAA520;">Manage All Products</h1>
+
+    <table class="table table-striped table-bordered shadow">
+        <thead class="table-dark">
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Seller</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% products.forEach(p => { %>
+                <tr>
+                    <td><img src="<%= p.img %>" width="70"></td>
+                    <td><%= p.name %></td>
+                    <td><%= p.author ? p.author.username : 'Unknown' %></td>
+                    <td>₹<%= p.price %></td>
+                    <td><%= p.stock %></td>
+                    <td>
+                        <form action="/admin/products/<%= p._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('../partials/home_footer.ejs') %>

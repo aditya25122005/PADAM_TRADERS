@@ -1,75 +1,84 @@
 <% layout('layouts/boilerplate') %>
-
 <%- include('partials/homenav') %>
 
+<link rel="stylesheet" href="/css/about.css">
 
-<!-- Ṃain Process -->
-<div class="mainProcess">
-    <div class="pheading"><h1>Operations</h1></div>
-    <div class="process">
-        
-        <div class="p1"><img src="/images/process/Sourcing.webp" alt="sourcing"> <span>Sourcing</span> </div>
-        <div class="p1"><img src="/images/process/Quality.webp" alt="sourcing"><span>Quality</span></div>
-        <div class="p1"><img src="/images/process/Refining.webp" alt="sourcing"><span>Refining</span></div>
-        <div class="p1"><img src="/images/process/Fractionation.webp" alt="sourcing"><span>Fractionation</span></div>
-        <div class="p1"><img src="/images/process/Packaging.webp" alt="sourcing"><span>Packaging</span></div>
-        <div class="p1"><img src="/images/process/Research.webp" alt="sourcing"><span>Research</span></div>
+<!-- ===================== HERO SECTION ===================== -->
+<section class="ops-hero">
+    <div class="ops-hero-overlay"></div>
+    <div class="ops-hero-content">
+        <h1>Our Operations</h1>
+        <p>From sourcing to packaging — every drop crafted with purity and care.</p>
     </div>
-</div>
+</section>
 
+<!-- ===================== OPERATIONS SECTION ===================== -->
+<section class="operations-wrapper">
+    <h2 class="section-title">Our Core Processes</h2>
 
-<!-- /Main Process Ends -->
+    <div class="operations-grid">
+        <div class="op-card">
+            <img src="/images/process/Sourcing.webp" alt="Sourcing">
+            <h3>Sourcing</h3>
+        </div>
 
-<!-- Nutritional Info -->
- <div class="Nutritions">
-        <DIV id="header-n">
-        <h1>Nutritional Values per 100gm</h1>
-    </DIV>
+        <div class="op-card">
+            <img src="/images/process/Quality.webp" alt="Quality">
+            <h3>Quality</h3>
+        </div>
 
-    <div class="nut-info">
-        <div class="n1">
+        <div class="op-card">
+            <img src="/images/process/Refining.webp" alt="Refining">
+            <h3>Refining</h3>
+        </div>
+
+        <div class="op-card">
+            <img src="/images/process/Fractionation.webp" alt="Fractionation">
+            <h3>Fractionation</h3>
+        </div>
+
+        <div class="op-card">
+            <img src="/images/process/Packaging.webp" alt="Packaging">
+            <h3>Packaging</h3>
+        </div>
+
+        <div class="op-card">
+            <img src="/images/process/Research.webp" alt="Research">
+            <h3>Research</h3>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== NUTRITION INFO ===================== -->
+<section class="nutrition-wrapper">
+    <h2 class="section-title">Nutritional Values (per 100g)</h2>
+
+    <div class="nutrition-grid">
+
+        <div class="nutri-card">
             <ul>
-                <li>ENERGY : 900kcal</li>
-                <LI>PROTEIN: 0GM</LI>
-                <LI>CARBOHYDRATES: 0GM</LI>
-                <LI>SUGAR 0G</LI>
-                <LI>Fatty Acid Composition : Fat 100%</LI>
-                <LI>Saturated Fatty Acids : 7.8 g</LI>
-                <LI>Trps Fatty Acids : 0 g</LI>
-
+                <li>Energy: 900 kcal</li>
+                <li>Protein: 0g</li>
+                <li>Carbohydrates: 0g</li>
+                <li>Sugar: 0g</li>
+                <li>Fat: 100%</li>
+                <li>Saturated Fat: 7.8g</li>
+                <li>Trans Fat: 0g</li>
             </ul>
         </div>
 
-
-
-        <div class="n2">
+        <div class="nutri-card">
             <ul>
-                <li>Cholesterol- - 0 mg</li>
-                <LI>Vitamin E - 40 mg</LI>
-                <LI>Added Vitamin A - 750 mcg* RE**</LI>
-                <LI>Added Vitamin D2 - 11.25 mcg*</LI>
-                <LI>Fatty Acid Composition - 900 cal</LI>
-                <LI>Poly-Unsaturated Fatty Acids - 28.8 g</LI>
-                <LI>Mono-Unsaturated Fatty Acids - 63.4 g</LI>
-
+                <li>Cholesterol: 0 mg</li>
+                <li>Vitamin E: 40 mg</li>
+                <li>Vitamin A: 750 mcg*</li>
+                <li>Vitamin D2: 11.25 mcg*</li>
+                <li>Poly-Unsaturated Fat: 28.8g</li>
+                <li>Mono-Unsaturated Fat: 63.4g</li>
             </ul>
         </div>
+
     </div>
-    </div>
-
-<!-- Nutritional Info ends -->
-
-
-
-
-
-
-
-
-
-
-
-
-
+</section>
 
 <%- include('partials/home_footer.ejs') %>

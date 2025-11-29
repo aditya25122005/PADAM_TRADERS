@@ -1,22 +1,13 @@
 <% layout('layouts/boilerplate') %>
 <%- include('../partials/navbar') %>
- <%- include('../partials/flash') %>
+<%- include('../partials/flash') %>
 
 <!-- back button -->
-
-
-    <a href="/products" class="btn btn-warning">
-        <i class="fas fa-arrow-left me-2"></i>Back
-    </a>
-
-
+<a href="/products" class="btn btn-warning">
+    <i class="fas fa-arrow-left me-2"></i>Back
+</a>
 
 <div class="container my-5">
-
-  
-
-
-
     <div class="text-center mb-4">
         <h1 class="display-4 fw-bold" style="color:#228B22;"><%= foundProduct.name %></h1>
         <p class="lead text-muted">Pure, Healthy, and Fresh Mustard Oil for Your Kitchen</p>
@@ -35,12 +26,22 @@
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3 class="mb-0" style="color:#228B22;">₹<%= foundProduct.price %></h3>
-                        <% if(currentUser && currentUser.role==='seller' && foundProduct.author && foundProduct.author.equals(currentUser._id)){ %>
-                        <a href="/products/<%= foundProduct._id %>/edit" class="btn btn-warning rounded-circle" style="background:#FF8C00; border:none; width:40px; height:40px; display:flex; justify-content:center; align-items:center;">
+
+                        <% 
+                            let isOwner = currentUser && foundProduct.author && foundProduct.author.equals(currentUser._id);
+                            let isAdmin = currentUser && currentUser.role === 'Admin';
+                        %>
+
+                        <% if(isOwner || isAdmin){ %>
+                        <a href="/products/<%= foundProduct._id %>/edit" 
+                           class="btn btn-warning rounded-circle"
+                           style="background:#FF8C00; border:none; width:40px; height:40px; display:flex; justify-content:center; align-items:center;">
+                            
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.69a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                             </svg>
+
                         </a>
                         <% } %>
                     </div>
@@ -58,18 +59,20 @@
                     </p>
                     <p class="text-muted mb-4"><%= foundProduct.desc %></p>
 
-                   <div class="d-flex justify-content-between gap-2">
-                    <a href="#" class="btn btn-warning btn-lg flex-fill" style="background:#FF8C00; border:none; color:#fff;">Buy Now</a>
-                    <% if(foundProduct.stock > 0) { %>
-                        <form action="/user/<%= foundProduct._id %>/add" method="post" class="flex-fill">
-                            <button type="submit" class="btn btn-success btn-lg w-100" style="background:#228B22; border:none;">
-                                Add to Cart
-                            </button>
-                        </form>
-                    <% } else { %>
-                        <button class="btn btn-secondary btn-lg flex-fill" disabled>Out of Stock</button>
-                    <% } %>
-                </div>
+                    <div class="d-flex justify-content-between gap-2">
+                        <a href="#" class="btn btn-warning btn-lg flex-fill" style="background:#FF8C00; border:none; color:#fff;">Buy Now</a>
+
+                        <% if(foundProduct.stock > 0) { %>
+                            <form action="/user/<%= foundProduct._id %>/add" method="post" class="flex-fill">
+                                <button type="submit" class="btn btn-success btn-lg w-100" style="background:#228B22; border:none;">
+                                    Add to Cart
+                                </button>
+                            </form>
+                        <% } else { %>
+                            <button class="btn btn-secondary btn-lg flex-fill" disabled>Out of Stock</button>
+                        <% } %>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -99,12 +102,14 @@
 
 <hr>
 
+<!-- REVIEWS SECTION -->
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-lg p-4" style="background: #FFF9E5; border-radius: 20px; border: 2px solid #FFC107;">
-                <h4 class="fw-bold mb-4 text-center" style="color:#228B22;">Leave a Review</h4>
                 
+                <h4 class="fw-bold mb-4 text-center" style="color:#228B22;">Leave a Review</h4>
+
                 <form action="/products/<%= foundProduct._id %>/review" method="POST" class="mb-4">
                     <div class="mb-3">
                         <fieldset class="starability-basic">
@@ -121,23 +126,24 @@
                             <label for="first-rate5" title="Amazing">5 stars</label>
                         </fieldset>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label class="form-label fw-semibold" for="comment">Comment:</label>
                         <textarea class="form-control" rows="3" name="comment" id="comment" placeholder="Share your experience..." style="border: 2px solid #FFC107;"></textarea>
                     </div>
-                    
+
                     <div class="d-grid">
                         <button class="btn btn-success btn-lg fw-semibold" style="background:#228B22; border:none;">Submit Review</button>
                     </div>
                 </form>
-                
+
                 <div class="mt-4">
                     <h5 class="fw-bold mb-3" style="color:#228B22;">Customer Reviews</h5>
+
                     <% if (foundProduct.reviews.length === 0) { %>
                         <p class="text-muted">No reviews yet. Be the first one!</p>
                     <% } %>
-                    
+
                     <% for(let review of foundProduct.reviews){ %>
                         <div class="card border-0 shadow-sm mb-3 p-3" style="background: #FFF9E5; border: 2px solid #4CAF50;">
                             <div class="card-body p-2">
@@ -146,27 +152,40 @@
                                         <i class="fas fa-user-circle me-1"></i>
                                         <%= review.author ? review.author.username : 'Anonymous' %>
                                     </h6>
+
                                     <% if (review.createdAt) { %>
                                         <small class="text-muted">
                                             <%= new Date(review.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) %>
                                         </small>
                                     <% } %>
                                 </div>
+
                                 <div class="mb-2">
                                     <% for(let i = 0; i < review.rating; i++) { %>
                                         <i class="fas fa-star text-warning"></i>
                                     <% } %>
                                 </div>
+
                                 <p class="mb-2"><%= review.comment %></p>
-                                 <% if (currentUser && review.author && review.author.equals(currentUser._id)) { %>
+
+                                <%
+                                    let isAuthor = currentUser && review.author && review.author.equals(currentUser._id);
+                                    let isAdmin = currentUser && currentUser.role === "Admin";
+                                %>
+
+                                <% if (isAuthor || isAdmin) { %>
                                 <form action="/products/<%= foundProduct._id %>/review/<%= review._id %>?_method=DELETE" method="POST">
                                     <button class="btn btn-danger btn-sm" style="background:#FF8C00; border:none;">Delete</button>
                                 </form>
-                                <% }%>
+                                <% } %>
+
+
                             </div>
                         </div>
                     <% } %>
+
                 </div>
+
             </div>
         </div>
     </div>

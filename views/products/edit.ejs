@@ -1,62 +1,62 @@
 <% layout('layouts/boilerplate') %>
-
 <%- include('../partials/navbar') %>
- <%- include('../partials/flash') %>
-
-<!-- <div class="container mt-4">
-    <%- include('../partials/flash') %>
-</div> -->
+<%- include('../partials/flash') %>
 
 <div class="container my-5">
+
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
+
             <div class="card shadow-sm rounded-3">
-                <div class="card-header text-center py-3" style="background-color: #f7d14d;">
-                    <h4 class="mb-0" style="color: #4b3832;">Edit Product Details</h4>
+
+                <div class="card-header text-center py-3" style="background:#f7d14d;">
+                    <h4 class="mb-0" style="color:#4b3832;">Edit Product</h4>
                 </div>
+
                 <div class="card-body p-4">
-                    <form action="/products/<%=foundProduct._id%>?_method=PATCH" method="post">
+
+                    <form action="/products/<%= foundProduct._id %>?_method=PATCH" method="POST">
+
                         <div class="mb-3">
-                            <label for="name" class="form-label" style="color: #4b3832;">Product Name</label>
-                            <input type="text" class="form-control" name="name" id="name" placeholder="Name of the product" value="<%=foundProduct.name%>" required>
+                            <label class="form-label">Name</label>
+                            <input type="text" name="name" value="<%= foundProduct.name %>" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="image" class="form-label" style="color: #4b3832;">Image URL</label>
-                            <input type="text" class="form-control" name="img" id="image" placeholder="Image of the product" value="<%=foundProduct.img%>" required>
+                            <label class="form-label">Image URL</label>
+                            <input type="text" name="img" value="<%= foundProduct.img %>" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="paisa" class="form-label" style="color: #4b3832;">Price (₹)</label>
-                            <input type="number" class="form-control" name="price" id="paisa" placeholder="Price of the product" value="<%=foundProduct.price%>" required>
+                            <label class="form-label">Price</label>
+                            <input type="number" name="price" value="<%= foundProduct.price %>" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="quantity" class="form-label" style="color: #4b3832;">Quantity</label>
-                            <input type="text" class="form-control" name="quantity" id="quantity" placeholder="Quantity of the product" value="<%=foundProduct.quantity%>" required>
+                            <label class="form-label">Quantity</label>
+                            <input type="text" name="quantity" value="<%= foundProduct.quantity %>" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="desc" class="form-label" style="color: #4b3832;">Description</label>
-                            <textarea class="form-control" name="desc" id="desc" rows="3" placeholder="Description of the product" required><%=foundProduct.desc%></textarea>
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="desc" rows="3"><%= foundProduct.desc %></textarea>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="stock" class="form-label" style="color: #4b3832;">Stock</label>
-                            <input type="number" class="form-control" name="stock" id="stock" placeholder="Stock of the product" value="<%=foundProduct.stock%>" required>
+                        <div class="mb-4">
+                            <label class="form-label">Stock</label>
+                            <input type="number" name="stock" value="<%= foundProduct.stock %>" class="form-control" required>
                         </div>
 
-                        <div class="d-grid gap-2 mt-4">
-                            <button class="btn" type="submit" style="background-color: #FFC107; color: #4b3832;">
-                                Edit Product
-                            </button>
-                        </div>
+                        <button class="btn btn-warning w-100" style="background:#FFC107;">Save Changes</button>
+
                     </form>
+
                 </div>
             </div>
+
         </div>
     </div>
+
 </div>
 
-
-<%- include('../partials/footer')%>
+<%- include('../partials/footer') %>
