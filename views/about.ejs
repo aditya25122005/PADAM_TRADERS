@@ -1,60 +1,219 @@
 <% layout('layouts/boilerplate') %>
-<%- include('partials/homenav') %>
+<%- include('./partials/homenav') %>
 
 <link rel="stylesheet" href="/css/about.css">
 
-<!-- ===================== HERO SECTION ===================== -->
+<style>
+/* --- HERO --- */
+.ops-hero {
+    position: relative;
+    height: 55vh;
+    background: url('/images/banner-mustard.webp') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ops-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+}
+.ops-hero-content {
+    position: relative;
+    color: #fffde8;
+    text-align: center;
+    max-width: 700px;
+}
+.ops-hero-content h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+.ops-hero-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+
+/* --- PROCESS GRID --- */
+.operations-wrapper {
+    padding: 60px 8%;
+    background: #fffdf5;
+}
+.section-title {
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #cc8a00;
+    margin-bottom: 30px;
+}
+
+.operations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+    gap: 25px;
+}
+.op-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+    border: 1px solid rgba(255,199,44,0.4);
+    transition: .3s;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+.op-card img {
+    width: 75px;
+    height: 75px;
+    object-fit: contain;
+}
+.op-card h3 {
+    margin-top: 12px;
+    font-size: 1.1rem;
+    color: #444;
+    font-weight: 600;
+}
+.op-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+}
+
+/* --- WHY CHOOSE US --- */
+.choose-wrapper {
+    padding: 60px 8%;
+    background: #fff7e1;
+}
+.choose-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+    gap: 30px;
+}
+.choose-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #ffe6a4;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+.choose-card h3 {
+    font-size: 1.3rem;
+    color: #c28700;
+    margin-bottom: 10px;
+}
+.choose-card p {
+    color: #444;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* --- NUTRITION SECTION --- */
+.nutrition-wrapper {
+    padding: 60px 8%;
+}
+.nutrition-grid {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+.nutri-card {
+    flex: 1;
+    min-width: 260px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid #ffe09c;
+}
+.nutri-card ul {
+    list-style: none;
+    padding: 0;
+}
+.nutri-card li {
+    padding: 6px 0;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #f7f1d2;
+}
+</style>
+
+<!-- ===================== HERO ===================== -->
 <section class="ops-hero">
     <div class="ops-hero-overlay"></div>
     <div class="ops-hero-content">
-        <h1>Our Operations</h1>
-        <p>From sourcing to packaging — every drop crafted with purity and care.</p>
+        <h1>Pure Mustard Oil, Crafted with Care</h1>
+        <p>From natural sourcing to precision packaging — experience purity in every step.</p>
     </div>
 </section>
 
-<!-- ===================== OPERATIONS SECTION ===================== -->
+<!-- ===================== PROCESS ===================== -->
 <section class="operations-wrapper">
     <h2 class="section-title">Our Core Processes</h2>
 
     <div class="operations-grid">
         <div class="op-card">
-            <img src="/images/process/Sourcing.webp" alt="Sourcing">
-            <h3>Sourcing</h3>
+            <img src="/images/process/Sourcing.webp" />
+            <h3>Natural Sourcing</h3>
         </div>
 
         <div class="op-card">
-            <img src="/images/process/Quality.webp" alt="Quality">
-            <h3>Quality</h3>
+            <img src="/images/process/Quality.webp" />
+            <h3>Strict Quality Checks</h3>
         </div>
 
         <div class="op-card">
-            <img src="/images/process/Refining.webp" alt="Refining">
-            <h3>Refining</h3>
+            <img src="/images/process/Refining.webp" />
+            <h3>Cold Pressed Extraction</h3>
         </div>
 
         <div class="op-card">
-            <img src="/images/process/Fractionation.webp" alt="Fractionation">
-            <h3>Fractionation</h3>
+            <img src="/images/process/Fractionation.webp" />
+            <h3>Healthy Filtration</h3>
         </div>
 
         <div class="op-card">
-            <img src="/images/process/Packaging.webp" alt="Packaging">
-            <h3>Packaging</h3>
+            <img src="/images/process/Packaging.webp" />
+            <h3>Safe Packaging</h3>
         </div>
 
         <div class="op-card">
-            <img src="/images/process/Research.webp" alt="Research">
-            <h3>Research</h3>
+            <img src="/images/process/Research.webp" />
+            <h3>Continuous Research</h3>
         </div>
     </div>
 </section>
 
-<!-- ===================== NUTRITION INFO ===================== -->
+
+<!-- ===================== WHY CHOOSE US ===================== -->
+<section class="choose-wrapper">
+    <h2 class="section-title">Why Choose PADAM Mustard Oil?</h2>
+
+    <div class="choose-grid">
+        <div class="choose-card">
+            <h3>🌿 100% Natural Ingredients</h3>
+            <p>We ensure all mustard seeds are naturally grown and sourced from trusted farms.</p>
+        </div>
+
+        <div class="choose-card">
+            <h3>🧪 Lab-Tested Purity</h3>
+            <p>Every batch undergoes strict quality testing for purity, nutrients, and hygiene.</p>
+        </div>
+
+        <div class="choose-card">
+            <h3>⚙️ Cold-Pressed Technology</h3>
+            <p>Retains all natural antioxidants, vitamins, and aroma without chemicals.</p>
+        </div>
+
+        <div class="choose-card">
+            <h3>🏆 Trusted For Generations</h3>
+            <p>Our brand stands on years of trust, quality, and customer commitment.</p>
+        </div>
+    </div>
+</section>
+
+
+<!-- ===================== NUTRITION ===================== -->
 <section class="nutrition-wrapper">
-    <h2 class="section-title">Nutritional Values (per 100g)</h2>
+    <h2 class="section-title">Nutritional Values (Per 100g)</h2>
 
     <div class="nutrition-grid">
-
         <div class="nutri-card">
             <ul>
                 <li>Energy: 900 kcal</li>
@@ -73,12 +232,11 @@
                 <li>Vitamin E: 40 mg</li>
                 <li>Vitamin A: 750 mcg*</li>
                 <li>Vitamin D2: 11.25 mcg*</li>
-                <li>Poly-Unsaturated Fat: 28.8g</li>
-                <li>Mono-Unsaturated Fat: 63.4g</li>
+                <li>PUFA: 28.8g</li>
+                <li>MUFA: 63.4g</li>
             </ul>
         </div>
-
     </div>
 </section>
 
-<%- include('partials/home_footer.ejs') %>
+<%- include('./partials/home_footer.ejs') %>

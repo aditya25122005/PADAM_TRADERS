@@ -1,0 +1,22 @@
+<% layout('admin/admin_layout', { pageTitle: pageTitle, active:'sellers' }) %>
+
+<div class="card card-gold p-3">
+  <h5>Sellers</h5>
+  <div class="table-responsive mt-3">
+    <table class="table">
+      <thead><tr><th>Seller</th><th>Email</th><th>Status</th><th>Products</th></tr></thead>
+      <tbody>
+        <% sellers.forEach(s => { %>
+          <tr>
+            <td><%= s.username || '—' %></td>
+            <td><%= s.email %></td>
+            <td><%= s.sellerStatus %></td>
+            <td>
+              <a class="btn btn-sm btn-primary" href="/admin/seller/<%= s._id %>/products">View Products</a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>

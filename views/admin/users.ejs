@@ -1,0 +1,27 @@
+<% layout('admin/admin_layout', { pageTitle: pageTitle, active:'users' }) %>
+
+<div class="card card-gold p-3">
+  <h5>All Users</h5>
+  <div class="table-responsive mt-3">
+    <table class="table">
+      <thead>
+        <tr><th>User</th><th>Email</th><th>Role</th><th>Seller Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        <% users.forEach(u => { %>
+          <tr>
+            <td><%= u.username || '—' %></td>
+            <td><%= u.email %></td>
+            <td><%= u.role %></td>
+            <td><%= u.sellerStatus %></td>
+            <td>
+              <form action="/admin/users/<%= u._id %>/delete" method="post" style="display:inline;">
+                <button class="btn btn-sm btn-danger" onclick="return confirm('Delete user?')">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>

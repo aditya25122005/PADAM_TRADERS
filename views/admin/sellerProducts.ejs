@@ -1,0 +1,21 @@
+<% layout('admin/admin_layout', { pageTitle: pageTitle, active:'sellers' }) %>
+
+<div class="card card-gold p-3">
+  <h5>Products by <%= seller.username || seller.email %></h5>
+
+  <div class="row mt-3 g-3">
+    <% products.forEach(p => { %>
+      <div class="col-md-4">
+        <div class="card p-2">
+          <img src="<%= p.img %>" class="img-fluid" style="height:140px; object-fit:contain;">
+          <div class="card-body p-2">
+            <h6><%= p.name %></h6>
+            <p class="mb-1"><small>Price: ₹<%= p.price %></small></p>
+            <p class="mb-1"><small>Stock: <%= p.stock %></small></p>
+            <a href="/products/<%= p._id %>" class="btn btn-sm btn-outline-primary">View</a>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>

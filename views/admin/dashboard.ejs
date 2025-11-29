@@ -1,39 +1,121 @@
-<% layout('layouts/boilerplate') %>
-<%- include('../partials/navbar') %>
+<% layout('admin/admin_layout', { pageTitle: pageTitle, active:'dashboard' }) %>
 
-<div class="container my-5">
-    <h1 class="mb-4 fw-bold text-center" style="color:#DAA520;">Admin Dashboard</h1>
-
-    <div class="row g-4">
-
-        <div class="col-md-4">
-            <div class="card shadow-lg p-4 text-center border-2 border-warning">
-                <h3><i class="bi bi-people-fill text-primary"></i></h3>
-                <h4>Total Users</h4>
-                <p class="display-5 fw-bold"><%= totalUsers %></p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-lg p-4 text-center border-2 border-success">
-                <h3><i class="bi bi-box-seam text-success"></i></h3>
-                <h4>Total Products</h4>
-                <p class="display-5 fw-bold"><%= totalProducts %></p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-lg p-4 text-center border-2 border-danger">
-                <h3><i class="bi bi-hourglass-split text-danger"></i></h3>
-                <h4>Pending Seller Requests</h4>
-                <p class="display-5 fw-bold"><%= pendingSellers %></p>
-
-                <a href="/admin/pending-sellers" class="btn btn-danger mt-3 w-75">Review Now</a>
-            </div>
-        </div>
-
+<div class="row g-3">
+  <div class="col-md-3">
+    <div class="p-3 card-gold">
+      <h6 class="text-muted">Users</h6>
+      <h3 class="mb-0"><%= totalUsers %></h3>
+      <small class="text-muted">Total registered users</small>
     </div>
+  </div>
 
+  <div class="col-md-3">
+    <div class="p-3 card-gold">
+      <h6 class="text-muted">Sellers</h6>
+      <h3 class="mb-0"><%= totalSellers %></h3>
+      <small class="text-muted"><%= pendingSellers %> pending</small>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="p-3 card-gold">
+      <h6 class="text-muted">Products</h6>
+      <h3 class="mb-0"><%= totalProducts %></h3>
+      <small class="text-muted">Total products in catalog</small>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="p-3 card-gold">
+      <h6 class="text-muted">Stock</h6>
+      <h3 class="mb-0"><%= totalStock %></h3>
+      <small class="text-muted">Total stock units</small>
+    </div>
+  </div>
 </div>
 
-<%- include('../partials/home_footer.ejs') %>
+<div class="row mt-4 g-3">
+  <div class="col-lg-8">
+    <div class="card card-gold p-3">
+      <h6>Top Sellers (by number of products)</h6>
+      <canvas id="sellerChart" height="140"></canvas>
+      <small class="text-muted">Top sellers by product count</small>
+    </div>
+
+    <div class="card card-gold p-3 mt-3">
+      <h6 class="mt-2">Products by Quantity (top)</h6>
+      <div class="table-responsive mt-2">
+        <table class="table table-sm">
+          <thead>
+            <tr><th>Quantity</th><th>#Products</th><th>Total Stock</th></tr>
+          </thead>
+          <tbody>
+            <% qtyAgg.forEach(q => { %>
+              <tr>
+                <td><%= q._id || 'N/A' %></td>
+                <td><%= q.count %></td>
+                <td><%= q.stock %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card card-gold p-3">
+      <h6>Recent Sellers Summary</h6>
+      <div class="list-group mt-2">
+        <% productsBySellerView.slice(0,6).forEach(s => { %>
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between">
+              <div>
+                <strong><%= s.sellerName %></strong><br>
+                <small class="text-muted"><%= s.sellerEmail %></small>
+              </div>
+              <div class="text-end">
+                <span class="badge bg-secondary"><%= s.productCount %> products</span>
+                <div><small class="text-muted">Stock: <%= s.totalStock %></small></div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+
+    <div class="card card-gold p-3 mt-3">
+      <h6>Quick Stats</h6>
+      <ul class="list-unstyled mb-0 mt-2">
+        <li><strong><%= messagesCount %></strong> messages</li>
+        <li><strong><%= pendingSellers %></strong> pending sellers</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Safely inject real JS arrays
+  const sellerLabels = <%- JSON.stringify(chartSellerLabels || []) %>;
+  const sellerCounts = <%-JSON.stringify(chartSellerCounts || []) %>;
+
+  console.log("Labels:", sellerLabels);
+  console.log("Counts:", sellerCounts);
+
+  // Chart.js rendering
+  const ctx = document.getElementById('sellerChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: sellerLabels,
+      datasets: [{
+        label: 'Number of Products',
+        data: sellerCounts,
+        backgroundColor: '#FFC72C'
+      }]
+    }
+  });
+</script>
