@@ -8,7 +8,6 @@ const router=express.Router();
 router.get('/user/cart',isLoggedIn,async (req,res)=>{
     try{
     let user = await User.findById(req.user._id).populate('cart');
-
     res.render('cart/cart',{user});
     }
     catch{

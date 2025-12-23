@@ -21,9 +21,9 @@ const adminRoutes = require('./routes/admin');
 
 const { setUser } = require('./middleware');
 
-
-mongoose.connect('mongodb://127.0.0.1:27017/padam')
-  .then(() => console.log("DB Connected Successfully"))
+require("dotenv").config();
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB connected to:", mongoose.connection.name))
   .catch(err => console.log(err));
 
 let configSession = {
@@ -84,6 +84,8 @@ app.get('/about', (req, res) => {
     res.render('about');
 });
 
-app.listen(8085, () => {
-    console.log("Server Connected At Port 8085");
+const PORT = process.env.PORT || 8085;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
