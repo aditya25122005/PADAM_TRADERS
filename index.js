@@ -8,6 +8,8 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 const localStrategy = require('passport-local');
+const MongoStore = require("connect-mongo").default;
+
 
 const User = require('./models/User');
 const productApi = require("./routes/api/productapi");
@@ -27,13 +29,18 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log(err));
 
 let configSession = {
-    secret: 'keyboard cat',
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    }),
+
     cookie: {
-        httpOnly: true,
-        expires: Date.now() + 24 * 7 * 60 * 60 * 1000,
-        maxAge: 24 * 7 * 60 * 60 * 1000
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000
     }
 };
 
@@ -46,6 +53,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
+app.set("trust proxy", 1);
 app.use(session(configSession));
 app.use(passport.initialize());
 app.use(passport.session());
