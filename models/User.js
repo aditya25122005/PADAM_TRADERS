@@ -63,6 +63,7 @@ const userSchema = new mongoose.Schema({
       createdAt: { type: Date, default: Date.now },
     },
   ],
+  
 
   sellerAppliedAt: { type: Date },
   sellerApprovedAt: { type: Date },
@@ -73,6 +74,24 @@ const userSchema = new mongoose.Schema({
       ref: "Product",
     },
   ],
+  googleId: {
+  type: String,
+  default: null
+  },
+
+  username: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  otp: String,
+    otpExpiry: Date,
+    isVerified: {
+    type: Boolean,
+    default: false
+  },
+
+
 });
 
 userSchema.plugin(passportLocalMongoose);

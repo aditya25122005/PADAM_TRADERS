@@ -62,6 +62,9 @@ app.use(setUser);
 
 // passport config
 passport.use(new localStrategy(User.authenticate()));
+
+require("./config/googleStrategy");
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
