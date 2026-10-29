@@ -1,130 +1,121 @@
-# 🌿 Padam Traders — E-Commerce Web Application
+<div align="center">
 
-Padam Traders is a full-stack e-commerce web application designed to provide customers with a convenient online shopping experience and administrators with product management capabilities. It features a mustard-yellow and earthy-green theme inspired by mustard oil branding.
+# 🌿 PADAM TRADERS
 
-## ✨ Key Features
+### Modern Full-Stack E-Commerce Web Application
 
-### 👤 Authentication and Authorization
-- User registration and login using JWT-based authentication.
-- Token-based authentication for protected API endpoints.
-- Role-based access control for administrators and customers, where implemented.
-- Protected routes for authorized operations.
+A robust, full-stack e-commerce platform featuring a high-performance React frontend and a secure Express/MongoDB backend architecture.
 
-### 🛍️ Shopping Experience
-- Browse products with details and images.
-- Add and remove products from the shopping cart.
-- Automatic cart total calculation.
-- Wishlist functionality to save favorite products.
-- Checkout and contact pages.
+[![Live App](https://img.shields.io/badge/Live%20Demo-Render-blue?style=for-the-badge&logo=render)](https://padam-traders-frontend.onrender.com)
+[![Backend API](https://img.shields.io/badge/API%20Status-Online-brightgreen?style=for-the-badge&logo=express)](https://padam-traders.onrender.com)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-### 🛠️ Admin Dashboard
-- Add, update, and delete product listings.
-- Manage product information through administrative interfaces.
-- User and order management, where implemented.
-
-### ✅ Server-Side Validation
-- Validate incoming request data before processing.
-- Handle invalid inputs to maintain data integrity.
-- Apply validation to supported forms and API endpoints.
-
-### 📞 Contact Page
-- Contact form for customer queries and messages.
-
-### 🎨 Responsive User Interface
-- React-based frontend.
-- Mustard-yellow and earthy-green color palette.
-- Responsive layouts for desktop and mobile screens.
-- Interactive UI elements and hover effects.
-
-## 🛠️ Tech Stack
-
-| Component | Technology |
-|---|---|
-| Frontend | React.js, JavaScript, HTML, CSS, Bootstrap (if used) |
-| Backend | Node.js, Express.js |
-| Database | MongoDB, Mongoose |
-| Authentication | JSON Web Tokens (JWT) |
-| API Communication | REST APIs |
-| Version Control | Git, GitHub |
-
-## 🏗️ Application Architecture
-
-The application follows a client-server architecture.
-
-- **Frontend:** React.js provides the user interface and communicates with the backend through API requests.
-- **Backend:** Node.js and Express.js handle business logic and API endpoints.
-- **Authentication Middleware:** Verifies JWTs before allowing access to protected endpoints.
-- **Authorization:** Restricts administrative operations according to user roles, where implemented.
-- **Database:** MongoDB stores application data, with Mongoose managing database models and queries.
-
-## 📸 Screenshots
-
-Add screenshots to the `screenshots/` directory and update the filenames below to match the actual files.
-
-### Homepage
-![Homepage](./screenshots/homepage.png)
-
-### Products Page
-![Products](./screenshots/products.png)
-
-### Home Page
-![Home](./screenshots/first.png)
-
-### Cart
-![Cart](./screenshots/cart.png)
-
-### Reviews
-![Reviews](./screenshots/review.png)
-
-### Checkout / Contact
-![Checkout](./screenshots/contact.png)
-
-### Login and Signup
-![Authentication](./screenshots/login.png)
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js and npm
-- MongoDB instance
-- Git
-
-### Installation
-
-1. Clone the repository:
-
-   ```bash
-   git clone <YOUR_REPOSITORY_URL>
-   ```
-
-2. Navigate to the project directory:
-
-   ```bash
-   cd <PROJECT_DIRECTORY>
-   ```
-
-3. Install dependencies in the relevant frontend and backend directories according to the project structure.
-
-4. Configure the required environment variables in the appropriate `.env` file or files.
-
-5. Start the backend and frontend using the commands defined in their respective `package.json` files.
-
-6. Open the frontend's local URL in your browser.
-
-**Note:** Refer to the actual project structure and package scripts for the correct setup commands. Never commit real database credentials, JWT secrets, or other sensitive environment variables.
-
-## 🎯 Project Objective
-
-Padam Traders demonstrates full-stack web development by combining a React frontend, Express.js backend, MongoDB database, REST APIs, and JWT-based authentication. The application brings together product browsing, cart and wishlist functionality, and administrative features in one e-commerce platform.
-
-## 🔮 Potential Improvements
-
-- Integrate a payment gateway.
-- Add automated tests for important API endpoints and user flows.
-- Improve product search, filtering, and pagination.
-- Enhance order tracking and order management.
-- Strengthen API security, validation, and error handling.
+[Live Application](https://padam-traders-frontend.onrender.com) · [API Endpoint](https://padam-traders.onrender.com) · [Report Issue](https://github.com/aditya25122005/PADAM_TRADERS/issues)
 
 ---
 
-**Padam Traders** — A full-stack e-commerce experience inspired by natural mustard oil branding.
+</div>
+
+## 📖 Overview
+
+**PADAM Traders** is a production-grade full-stack e-commerce web platform engineered with the **MERN** stack (MongoDB, Express.js, React.js, Node.js). 
+
+The platform delivers a secure, seamless online shopping experience with features ranging from real-time email OTP account verification, cross-subdomain JWT cookie session persistence, role-based access control (RBAC) for admins and sellers, to interactive product reviews and cart management.
+
+### Key Highlights
+- 🔐 **Cross-Origin Authentication:** Secure JWT-based authentication using HTTP-only, `SameSite=None` cookies configured specifically for production deployment across distinct subdomains.
+- ⚡ **Lightning Fast Frontend:** Vite-powered React 18 client styled with Tailwind CSS for high performance and responsiveness.
+- 🛡️ **Role-Based Access Control (RBAC):** Strict permission layers separating standard Customers, Verified Sellers, and Platform Administrators.
+- 📬 **Automated Email Service:** Integrated email verification workflow powered by Nodemailer and OTP validation.
+
+---
+
+## ✨ Features
+
+### 👤 User Authentication & Security
+- **Email OTP Verification:** Real-time email OTP dispatch during signup for user authentication.
+- **Persistent Sessions:** Cross-site HTTP-only `accessToken` cookie management preventing XSS attacks.
+- **Google OAuth 2.0 Integration:** Direct single sign-on option via Google Authentication strategy.
+- **Protected Routes:** Granular access guards for client navigation and API endpoints.
+
+### 🛍️ Storefront & E-Commerce Core
+- **Product Catalog:** Real-time retrieval of products with detailed view specifications.
+- **Cart & Wishlist Systems:** Persistent state management for user shopping carts and saved items.
+- **Rating & Review Engine:** Customer reviews with ratings, authorization checks, and moderation.
+- **Responsive Navigation:** Optimized layout across mobile, tablet, and desktop viewports.
+
+### 💼 Management & Administration
+- **Seller Portal:** Seller application workflows and specialized inventory management.
+- **Admin Dashboard:** Control panel for platform content, customer reviews, and account permissions.
+- **Contact Communications:** Direct customer enquiry and feedback channel.
+
+---
+
+## 📸 Application Preview
+
+<div align="center">
+
+### 🏠 Home Page
+![PADAM Traders Home Page](./screenshots/home.png)
+
+### 🛍️ Product Catalog
+![Product Listing](./screenshots/products.png)
+
+### 📦 Product Details & Reviews
+![Product Details](./screenshots/product-details.png)
+
+### 🔐 Authentication
+| Login Page | Registration Page |
+| :---: | :---: |
+| ![Login Page](./screenshots/login.png) | ![Signup Page](./screenshots/signup.png) |
+
+### 🛒 Shopping Cart & Wishlist
+| Shopping Cart | Wishlist |
+| :---: | :---: |
+| ![Shopping Cart](./screenshots/cart.png) | ![Wishlist](./screenshots/wishlist.png) |
+
+### 🛠️ Admin Dashboard
+![Admin Dashboard](./screenshots/admin-dashboard.png)
+
+</div>
+
+---
+
+## 🛠️ Tech Stack
+
+| Domain | Technologies |
+| :--- | :--- |
+| **Frontend Framework** | React.js (Vite), React Router DOM |
+| **Styling & UI** | Tailwind CSS, Lucide Icons |
+| **Backend Runtime** | Node.js, Express.js |
+| **Database & ORM** | MongoDB, Mongoose ODM |
+| **Authentication** | JSON Web Tokens (JWT), Passport.js (Local & Google OAuth 2.0), Cookie-Parser |
+| **Security & Validation** | CORS, Joi Validation Engine, HttpOnly / SameSite Security |
+| **Email Services** | Nodemailer (SMTP / Gmail App Passwords) |
+| **Deployment Platform**| Render (Web Service & Static Site) |
+
+---
+
+## 🗂️ Repository Architecture
+
+```text
+PADAM_TRADERS/
+├── client/                     # Frontend Application (React + Vite)
+│   ├── src/
+│   │   ├── components/         # Reusable UI Components (Navbar, Cards, Modals)
+│   │   ├── pages/              # View Routes (Home, Products, Cart, Admin)
+│   │   ├── services/           # Axios API Client Setup
+│   │   └── context/            # Global State Management
+│   └── package.json
+│
+├── server/                     # Backend API Service (Node.js + Express)
+│   ├── config/                 # Passport & OAuth Configurations
+│   ├── middleware/             # Auth Guards, RBAC, Validation Middleware
+│   ├── models/                 # Mongoose Database Schemas (User, Product, Review)
+│   ├── routes/                 # Express API Endpoint Modules
+│   ├── utils/                  # JWT Signing & Mailer Helper Utilities
+│   └── app.js                  # Main Express Application Pipeline
+│
+├── screenshots/                # Visual Assets for Documentation
+├── .gitignore
+└── README.md
