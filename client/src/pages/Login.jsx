@@ -158,9 +158,9 @@ function Login() {
               </div>
 
               <a
-                href="http://localhost:8085/auth/google"
-                className="flex w-full items-center justify-center gap-3 rounded-xl border border-stone-300 bg-white px-4 py-3 font-semibold text-stone-700 shadow-sm transition hover:bg-stone-50 active:scale-[0.99]"
-              >
+              href={`${api.defaults.baseURL}/auth/google`}
+              className="flex w-full items-center justify-center gap-3 rounded-xl border border-stone-300 bg-white px-4 py-3 font-semibold text-stone-700 shadow-sm transition hover:bg-stone-50 active:scale-[0.99]"
+            >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path
                     fill="#4285F4"
