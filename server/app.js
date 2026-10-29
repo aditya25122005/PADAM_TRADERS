@@ -20,46 +20,51 @@ const adminApiRoutes = require("./routes/api/admin");
 
 const app = express();
 
-app.set("trust proxy", 1);
+// Trust Render's reverse proxy for HTTPS cookie delivery
+app.set("trust proxy", true);
 
-// CORS configuration
+// Clean CORS configuration allowing cross-origin credential sharing
 const allowedOrigins = [
-  "https://padam-traders-frontend.onrender.com",
-  "http://localhost:5173",
+    "https://padam-traders-frontend.onrender.com",
+    "http://localhost:5173",
+    "http://localhost:3000"
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, origin || true);
-    }
-    return callback(new Error("Not allowed by CORS"));
-  },
-  credentials: true,
-  methods: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  optionsSuccessStatus: 204,
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, curl, postman)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            return callback(null, origin); // Always return exact origin string
+        }
+        
+        return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+    methods: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 204,
 }));
 
-// General middleware
+// Core middleware order
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-// Passport configuration
+// Passport initialization
 app.use(passport.initialize());
 
 const LocalStrategy = require("passport-local").Strategy;
-
 passport.use(new LocalStrategy(User.authenticate()));
 
 require("./config/googleStrategy");
 
-// Routes
+// Register Routes
+app.use(authRoutes);
 app.use(productApi);
 app.use(productRoutes);
-app.use(authRoutes);
 app.use(reviewRoutes);
 app.use(contactRoutes);
 app.use(cartRoutes);

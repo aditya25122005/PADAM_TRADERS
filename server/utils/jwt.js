@@ -3,10 +3,12 @@ const jwt = require("jsonwebtoken");
 const COOKIE_NAME = "accessToken";
 const TOKEN_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction, // Required to be true when sameSite is 'none'
+    sameSite: isProduction ? "none" : "lax", // Enables cross-subdomain cookie delivery on Render
     path: "/",
     maxAge: TOKEN_MAX_AGE,
 };
@@ -30,8 +32,8 @@ function setTokenCookie(res, token) {
 function clearTokenCookie(res) {
     res.clearCookie(COOKIE_NAME, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
         path: "/",
     });
 }
