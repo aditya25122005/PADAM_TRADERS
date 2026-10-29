@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
@@ -42,7 +41,7 @@ function ProductDetails() {
         if (productRes.status === 'fulfilled') {
           setProduct(productRes.value.data)
         } else {
-          setError('Product load nahi ho paaya.')
+          setError('Could not load product details.')
         }
 
         if (reviewsRes.status === 'fulfilled') {
@@ -53,7 +52,7 @@ function ProductDetails() {
           )
         } else {
           console.error('Reviews fetch error:', reviewsRes.reason)
-          setReviewMessage('Reviews load nahi ho paaye.')
+          setReviewMessage('Could not load reviews.')
         }
 
         if (userRes.status === 'fulfilled' && userRes.value.data.loggedIn) {
@@ -61,7 +60,7 @@ function ProductDetails() {
         }
       } catch (err) {
         console.error(err)
-        if (!cancelled) setError('Data load nahi ho paaya.')
+        if (!cancelled) setError('Could not load data.')
       } finally {
         if (!cancelled) {
           setLoading(false)
@@ -83,16 +82,16 @@ function ProductDetails() {
 
     try {
       await api.post(`/api/cart/${id}`)
-      setCartMessage('Product cart mein successfully add ho gaya!')
+      setCartMessage('Product added to cart successfully!')
     } catch (err) {
       console.error('Add to cart error:', err)
 
       if (err.response?.status === 401 || err.response?.status === 403) {
-        setCartMessage('Cart mein add karne ke liye pehle login karo.')
+        setCartMessage('Please login first to add items to cart.')
       } else {
         setCartMessage(
           err.response?.data?.message ||
-            'Product cart mein add nahi hua. Login check karo.'
+            'Could not add product to cart. Please check your login status.'
         )
       }
     } finally {
@@ -114,15 +113,15 @@ function ProductDetails() {
       setReviews((previous) => [res.data, ...previous])
       setComment('')
       setRating(5)
-      setReviewMessage('Review successfully submit ho gaya!')
+      setReviewMessage('Review submitted successfully!')
     } catch (err) {
       console.error('Review submit error:', err)
 
       if (err.response?.status === 401 || err.response?.status === 403) {
-        setReviewMessage('Review dene ke liye pehle login karo.')
+        setReviewMessage('Please login first to leave a review.')
       } else {
         setReviewMessage(
-          err.response?.data?.message || 'Review submit nahi ho paaya.'
+          err.response?.data?.message || 'Could not submit review.'
         )
       }
     } finally {
@@ -131,7 +130,7 @@ function ProductDetails() {
   }
 
   const handleDeleteReview = async (reviewId) => {
-    if (!window.confirm('Kya tum ye review delete karna chahte ho?')) return
+    if (!window.confirm('Are you sure you want to delete this review?')) return
 
     setDeletingReviewId(reviewId)
     setReviewMessage('')
@@ -142,12 +141,12 @@ function ProductDetails() {
       setReviews((previous) =>
         previous.filter((review) => review._id !== reviewId)
       )
-      setReviewMessage('Review delete ho gaya.')
+      setReviewMessage('Review deleted successfully.')
     } catch (err) {
       console.error('Delete review error:', err)
       setReviewMessage(
         err.response?.data?.message ||
-          'Review delete nahi hua. Permission check karo.'
+          'Could not delete review. Please check your permissions.'
       )
     } finally {
       setDeletingReviewId(null)
@@ -254,7 +253,6 @@ function ProductDetails() {
               </div>
             </div>
 
-            {/* Reviews */}
             <section className="mt-12">
               <div className="mb-6">
                 <h2 className="text-2xl font-extrabold">Customer Reviews</h2>
@@ -269,7 +267,7 @@ function ProductDetails() {
                   </p>
                 ) : (
                   <p className="mt-2 text-stone-600">
-                    Abhi koi review nahi hai. Pehla review tum do!
+                    No reviews yet. Be the first to leave a review!
                   </p>
                 )}
               </div>
@@ -322,7 +320,7 @@ function ProductDetails() {
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     rows={4}
-                    placeholder="Apna experience share karo..."
+                    placeholder="Share your experience..."
                     className="mt-2 w-full rounded-lg border border-stone-300 p-3 outline-none focus:border-amber-600"
                   />
 
@@ -337,14 +335,14 @@ function ProductDetails() {
               ) : (
                 <div className="rounded-xl bg-white p-6 shadow-sm">
                   <p className="text-stone-600">
-                    Review dene ke liye login karo.
+                    Please login to leave a review.
                   </p>
-                <Link
-                to="/login"
-                className="mt-3 inline-block font-semibold text-amber-800 hover:underline"
-              >
-                Login
-              </Link>
+                  <Link
+                    to="/login"
+                    className="mt-3 inline-block font-semibold text-amber-800 hover:underline"
+                  >
+                    Login
+                  </Link>
                 </div>
               )}
 

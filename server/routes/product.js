@@ -1,27 +1,22 @@
-
 const express = require("express");
-const Product = require("../models/Product");
 
+const Product = require("../models/Product");
 const {
     isLoggedIn,
     isSeller,
     isProductAuthor,
-    validateProduct
+    validateProduct,
 } = require("../middleware");
 
 const router = express.Router();
 
-// =====================================================
-// ADD PRODUCT
-// POST /api/products
-// Admin and approved sellers can add products.
-// =====================================================
+// Add product
 router.post(
     "/api/products",
     isLoggedIn,
     isSeller,
     validateProduct,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const {
                 name,
@@ -29,7 +24,7 @@ router.post(
                 price,
                 quantity,
                 desc,
-                stock
+                stock,
             } = req.body;
 
             const product = await Product.create({
@@ -39,36 +34,27 @@ router.post(
                 quantity,
                 desc,
                 stock,
-                author: req.user._id
+                author: req.user._id,
             });
 
             return res.status(201).json({
                 success: true,
                 message: "Product added successfully",
-                product
+                product,
             });
         } catch (error) {
-            console.error("Add product error:", error);
-
-            return res.status(500).json({
-                success: false,
-                message: "Cannot add new product"
-            });
+            return next(error);
         }
     }
 );
 
-// =====================================================
-// UPDATE PRODUCT
-// PATCH /api/products/:id
-// Product owner or Admin can update the product.
-// =====================================================
+// Update product
 router.patch(
     "/api/products/:id",
     isLoggedIn,
     isProductAuthor,
     validateProduct,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const {
                 name,
@@ -76,7 +62,7 @@ router.patch(
                 price,
                 quantity,
                 desc,
-                stock
+                stock,
             } = req.body;
 
             const product = await Product.findByIdAndUpdate(
@@ -87,47 +73,38 @@ router.patch(
                     price,
                     quantity,
                     desc,
-                    stock
+                    stock,
                 },
                 {
                     new: true,
-                    runValidators: true
+                    runValidators: true,
                 }
             );
 
             if (!product) {
                 return res.status(404).json({
                     success: false,
-                    message: "Product not found"
+                    message: "Product not found",
                 });
             }
 
             return res.json({
                 success: true,
                 message: "Product updated successfully",
-                product
+                product,
             });
         } catch (error) {
-            console.error("Update product error:", error);
-
-            return res.status(500).json({
-                success: false,
-                message: "Cannot update product"
-            });
+            return next(error);
         }
     }
 );
 
-// =====================================================
-// DELETE PRODUCT
-// DELETE /api/products/:id
-// Product owner or Admin can delete the product.
-// =====================================================
+// Delete product
 router.delete(
     "/api/products/:id",
     isLoggedIn,
     isProductAuthor,
-    async (req, res) => {
+    async (req, res, next) => {
         try {
             const product = await Product.findByIdAndDelete(
                 req.params.id
@@ -136,21 +113,16 @@ router.delete(
             if (!product) {
                 return res.status(404).json({
                     success: false,
-                    message: "Product not found"
+                    message: "Product not found",
                 });
             }
 
             return res.json({
                 success: true,
-                message: "Product deleted successfully"
+                message: "Product deleted successfully",
             });
         } catch (error) {
-            console.error("Delete product error:", error);
-
-            return res.status(500).json({
-                success: false,
-                message: "Cannot delete product"
-            });
+            return next(error);
         }
     }
 );

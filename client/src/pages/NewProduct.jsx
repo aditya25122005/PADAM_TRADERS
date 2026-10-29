@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
@@ -32,7 +31,6 @@ function NewProduct() {
     setError('')
 
     try {
-      // Existing product POST route currently serves EJS redirects.
       await api.post('/api/products', {
         ...form,
         price: Number(form.price),
@@ -45,7 +43,7 @@ function NewProduct() {
       setError(
         err.response?.data?.error ||
           err.response?.data?.message ||
-          'Product add nahi ho paaya. Check your permissions and try again.',
+          'Could not add product. Check your permissions and try again.',
       )
     } finally {
       setLoading(false)

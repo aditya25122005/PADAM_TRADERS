@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
@@ -34,7 +33,7 @@ function EditProduct() {
         const product = res.data?.product ?? res.data
 
         if (!product || !product._id) {
-          throw new Error('Product data nahi mila.')
+          throw new Error('Product data not found.')
         }
 
         if (cancelled) return
@@ -54,7 +53,7 @@ function EditProduct() {
           setError(
             err.response?.data?.message ||
               err.message ||
-              'Product details load nahi ho paaye.'
+              'Could not load product details.'
           )
         }
       } finally {
@@ -90,12 +89,12 @@ function EditProduct() {
     const stock = Number(form.stock)
 
     if (!form.name.trim()) {
-      setError('Product name required hai.')
+      setError('Product name is required.')
       return
     }
 
     if (!form.img.trim()) {
-      setError('Image URL required hai.')
+      setError('Image URL is required.')
       return
     }
 
@@ -104,7 +103,7 @@ function EditProduct() {
       !Number.isFinite(price) ||
       price < 0
     ) {
-      setError('Valid price enter karo.')
+      setError('Please enter a valid price.')
       return
     }
 
@@ -113,12 +112,12 @@ function EditProduct() {
       !Number.isInteger(stock) ||
       stock < 0
     ) {
-      setError('Stock zero ya positive whole number hona chahiye.')
+      setError('Stock must be zero or a positive whole number.')
       return
     }
 
     if (!form.quantity.trim()) {
-      setError('Quantity required hai, jaise 15 Kg ya 1 Litre.')
+      setError('Quantity is required, e.g., 15 Kg or 1 Litre.')
       return
     }
 
@@ -129,14 +128,13 @@ function EditProduct() {
         name: form.name.trim(),
         img: form.img.trim(),
         price,
-        quantity: form.quantity.trim(), // Product schema: String
+        quantity: form.quantity.trim(),
         stock,
         desc: form.desc.trim(),
       }
 
       const res = await api.patch(`/api/products/${id}`, payload)
 
-      // Do not show success unless the API confirms the update
       const updatedProduct = res.data?.product
 
       if (
@@ -146,11 +144,10 @@ function EditProduct() {
       ) {
         throw new Error(
           res.data?.message ||
-            'Backend ne update confirm nahi kiya. Server response check karo.'
+            'Backend did not confirm the update. Please check server response.'
         )
       }
 
-      // Confirm that the returned document contains the submitted values
       const valuesMatch =
         updatedProduct.name === payload.name &&
         updatedProduct.img === payload.img &&
@@ -161,13 +158,12 @@ function EditProduct() {
 
       if (!valuesMatch) {
         throw new Error(
-          'Server ne purani ya different product details return ki hain. Update route check karna hoga.'
+          'Server returned different or outdated product details. Please check update route.'
         )
       }
 
       alert('Product updated successfully!')
 
-      // Open the product listing; it will fetch the current data.
       navigate('/products', { replace: true })
     } catch (err) {
       console.error('Update product error:', err)
@@ -175,7 +171,7 @@ function EditProduct() {
       setError(
         err.response?.data?.message ||
           err.message ||
-          'Product update nahi hua. Please try again.'
+          'Could not update product. Please try again.'
       )
     } finally {
       setSaving(false)

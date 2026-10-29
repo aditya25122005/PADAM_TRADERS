@@ -1,4 +1,3 @@
-
 const express = require("express");
 const mongoose = require("mongoose");
 
@@ -9,16 +8,11 @@ const { isLoggedIn, isAdmin } = require("../../middleware");
 
 const router = express.Router();
 
-
-
-function isValidId(id) {
-    return mongoose.Types.ObjectId.isValid(id);
-}
+const isValidId = (id) => mongoose.Types.ObjectId.isValid(id);
 
 router.use(isLoggedIn, isAdmin);
 
-// GET /api/admin/dashboard
-// =========================
+// Dashboard statistics
 router.get("/api/admin/dashboard", async (req, res) => {
     try {
         const [
@@ -29,12 +23,12 @@ router.get("/api/admin/dashboard", async (req, res) => {
             messagesCount,
             totalStockAgg,
             productsBySeller,
-            qtyAgg
+            qtyAgg,
         ] = await Promise.all([
             User.countDocuments({}),
             User.countDocuments({
                 role: "Seller",
-                sellerStatus: "approved"
+                sellerStatus: "approved",
             }),
             User.countDocuments({ sellerStatus: "pending" }),
             Product.countDocuments({}),
@@ -43,9 +37,9 @@ router.get("/api/admin/dashboard", async (req, res) => {
                 {
                     $group: {
                         _id: null,
-                        totalStock: { $sum: "$stock" }
-                    }
-                }
+                        totalStock: { $sum: "$stock" },
+                    },
+                },
             ]),
             Product.aggregate([
                 { $match: { author: { $type: "objectId" } } },
@@ -53,39 +47,39 @@ router.get("/api/admin/dashboard", async (req, res) => {
                     $group: {
                         _id: "$author",
                         productCount: { $sum: 1 },
-                        totalStock: { $sum: "$stock" }
-                    }
+                        totalStock: { $sum: "$stock" },
+                    },
                 },
                 { $sort: { productCount: -1 } },
-                { $limit: 20 }
+                { $limit: 20 },
             ]),
             Product.aggregate([
                 {
                     $group: {
                         _id: "$quantity",
                         count: { $sum: 1 },
-                        stock: { $sum: "$stock" }
-                    }
+                        stock: { $sum: "$stock" },
+                    },
                 },
                 { $sort: { count: -1 } },
-                { $limit: 10 }
-            ])
+                { $limit: 10 },
+            ]),
         ]);
 
-        const sellerIds = productsBySeller.map(item => item._id);
+        const sellerIds = productsBySeller.map((item) => item._id);
 
         const sellers = await User.find({
-            _id: { $in: sellerIds }
+            _id: { $in: sellerIds },
         }).select("username email");
 
         const sellerMap = new Map(
-            sellers.map(seller => [
+            sellers.map((seller) => [
                 seller._id.toString(),
-                seller
+                seller,
             ])
         );
 
-        const productsBySellerView = productsBySeller.map(item => {
+        const productsBySellerView = productsBySeller.map((item) => {
             const seller = sellerMap.get(item._id.toString());
 
             return {
@@ -93,7 +87,7 @@ router.get("/api/admin/dashboard", async (req, res) => {
                 sellerName: seller?.username || "Unknown",
                 sellerEmail: seller?.email || "",
                 productCount: item.productCount,
-                totalStock: item.totalStock
+                totalStock: item.totalStock,
             };
         });
 
@@ -107,32 +101,28 @@ router.get("/api/admin/dashboard", async (req, res) => {
                 pendingSellers,
                 totalProducts,
                 messagesCount,
-                totalStock: totalStockAgg[0]?.totalStock || 0
+                totalStock: totalStockAgg[0]?.totalStock || 0,
             },
             productsBySeller: productsBySellerView,
             quantityStats: qtyAgg,
             chartSellerLabels: topSellers.map(
-                seller => seller.sellerName
+                (seller) => seller.sellerName
             ),
             chartSellerCounts: topSellers.map(
-                seller => seller.productCount
-            )
+                (seller) => seller.productCount
+            ),
         });
     } catch (error) {
         console.error("Admin dashboard API:", error);
 
         return res.status(500).json({
             success: false,
-            message: "Unable to load admin dashboard."
+            message: "Unable to load admin dashboard.",
         });
     }
 });
 
-// =========================
-// USERS
-// GET /api/admin/users
-// DELETE /api/admin/users/:id
-// =========================
+// Users
 router.get("/api/admin/users", async (req, res) => {
     try {
         const users = await User.find({})
@@ -147,7 +137,7 @@ router.get("/api/admin/users", async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message: "Unable to load users."
+            message: "Unable to load users.",
         });
     }
 });
@@ -159,14 +149,14 @@ router.delete("/api/admin/users/:id", async (req, res) => {
         if (!isValidId(id)) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid user ID."
+                message: "Invalid user ID.",
             });
         }
 
         if (id === req.user._id.toString()) {
             return res.status(400).json({
                 success: false,
-                message: "You cannot delete your own account here."
+                message: "You cannot delete your own account here.",
             });
         }
 
@@ -175,29 +165,25 @@ router.delete("/api/admin/users/:id", async (req, res) => {
         if (!deletedUser) {
             return res.status(404).json({
                 success: false,
-                message: "User not found."
+                message: "User not found.",
             });
         }
 
         return res.json({
             success: true,
-            message: "User deleted successfully."
+            message: "User deleted successfully.",
         });
     } catch (error) {
         console.error("Admin delete user API:", error);
 
         return res.status(500).json({
             success: false,
-            message: "Failed to delete user."
+            message: "Failed to delete user.",
         });
     }
 });
 
-// =========================
-// SELLERS
-// GET /api/admin/sellers
-// GET /api/admin/sellers/:id/products
-// =========================
+// Sellers
 router.get("/api/admin/sellers", async (req, res) => {
     try {
         const sellers = await User.find({ role: "Seller" })
@@ -212,7 +198,7 @@ router.get("/api/admin/sellers", async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message: "Unable to load sellers."
+            message: "Unable to load sellers.",
         });
     }
 });
@@ -224,43 +210,41 @@ router.get("/api/admin/sellers/:id/products", async (req, res) => {
         if (!isValidId(id)) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid seller ID."
+                message: "Invalid seller ID.",
             });
         }
 
-        const seller = await User.findById(id)
-            .select("username email role sellerStatus");
+        const seller = await User.findById(id).select(
+            "username email role sellerStatus"
+        );
 
         if (!seller) {
             return res.status(404).json({
                 success: false,
-                message: "Seller not found."
+                message: "Seller not found.",
             });
         }
 
-        const products = await Product.find({ author: id })
-            .sort({ name: 1 });
+        const products = await Product.find({ author: id }).sort({
+            name: 1,
+        });
 
         return res.json({
             success: true,
             seller,
-            products
+            products,
         });
     } catch (error) {
         console.error("Admin seller products API:", error);
 
         return res.status(500).json({
             success: false,
-            message: "Unable to load seller products."
+            message: "Unable to load seller products.",
         });
     }
 });
 
-// =========================
-// ALL PRODUCTS
-// GET /api/admin/products
-// DELETE /api/admin/products/:id
-// =========================
+// Products
 router.get("/api/admin/products", async (req, res) => {
     try {
         const products = await Product.find({})
@@ -273,7 +257,7 @@ router.get("/api/admin/products", async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message: "Unable to load products."
+            message: "Unable to load products.",
         });
     }
 });
@@ -285,7 +269,7 @@ router.delete("/api/admin/products/:id", async (req, res) => {
         if (!isValidId(id)) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid product ID."
+                message: "Invalid product ID.",
             });
         }
 
@@ -294,29 +278,25 @@ router.delete("/api/admin/products/:id", async (req, res) => {
         if (!product) {
             return res.status(404).json({
                 success: false,
-                message: "Product not found."
+                message: "Product not found.",
             });
         }
 
         return res.json({
             success: true,
-            message: "Product deleted successfully."
+            message: "Product deleted successfully.",
         });
     } catch (error) {
         console.error("Admin delete product API:", error);
 
         return res.status(500).json({
             success: false,
-            message: "Failed to delete product."
+            message: "Failed to delete product.",
         });
     }
 });
 
-// =========================
-// CUSTOMER MESSAGES
-// GET /api/admin/messages
-// DELETE /api/admin/messages/:id
-// =========================
+// Customer messages
 router.get("/api/admin/messages", async (req, res) => {
     try {
         const messages = await Message.find({})
@@ -329,7 +309,7 @@ router.get("/api/admin/messages", async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message: "Unable to load messages."
+            message: "Unable to load messages.",
         });
     }
 });
@@ -341,7 +321,7 @@ router.delete("/api/admin/messages/:id", async (req, res) => {
         if (!isValidId(id)) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid message ID."
+                message: "Invalid message ID.",
             });
         }
 
@@ -350,33 +330,30 @@ router.delete("/api/admin/messages/:id", async (req, res) => {
         if (!message) {
             return res.status(404).json({
                 success: false,
-                message: "Message not found."
+                message: "Message not found.",
             });
         }
 
         return res.json({
             success: true,
-            message: "Message deleted successfully."
+            message: "Message deleted successfully.",
         });
     } catch (error) {
         console.error("Admin delete message API:", error);
 
         return res.status(500).json({
             success: false,
-            message: "Failed to delete message."
+            message: "Failed to delete message.",
         });
     }
 });
 
-// =========================
-// PENDING SELLER APPLICATIONS
-// GET /api/admin/pending-sellers
-// PATCH /api/admin/pending-sellers/:id/approve
-// PATCH /api/admin/pending-sellers/:id/reject
-// =========================
+// Pending seller applications
 router.get("/api/admin/pending-sellers", async (req, res) => {
     try {
-        const pending = await User.find({ sellerStatus: "pending" })
+        const pending = await User.find({
+            sellerStatus: "pending",
+        })
             .select("username email sellerAppliedAt role")
             .sort({ sellerAppliedAt: -1 });
 
@@ -386,7 +363,7 @@ router.get("/api/admin/pending-sellers", async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message: "Unable to load pending seller applications."
+            message: "Unable to load pending seller applications.",
         });
     }
 });
@@ -400,7 +377,7 @@ router.patch(
             if (!isValidId(id)) {
                 return res.status(400).json({
                     success: false,
-                    message: "Invalid user ID."
+                    message: "Invalid user ID.",
                 });
             }
 
@@ -410,30 +387,32 @@ router.patch(
                     $set: {
                         role: "Seller",
                         sellerStatus: "approved",
-                        sellerApprovedAt: new Date()
-                    }
+                        sellerApprovedAt: new Date(),
+                    },
                 },
                 { new: true, runValidators: true }
-            ).select("username email role sellerStatus sellerApprovedAt");
+            ).select(
+                "username email role sellerStatus sellerApprovedAt"
+            );
 
             if (!seller) {
                 return res.status(404).json({
                     success: false,
-                    message: "Pending seller application not found."
+                    message: "Pending seller application not found.",
                 });
             }
 
             return res.json({
                 success: true,
                 message: "Seller approved successfully.",
-                seller
+                seller,
             });
         } catch (error) {
             console.error("Admin approve seller API:", error);
 
             return res.status(500).json({
                 success: false,
-                message: "Failed to approve seller."
+                message: "Failed to approve seller.",
             });
         }
     }
@@ -448,7 +427,7 @@ router.patch(
             if (!isValidId(id)) {
                 return res.status(400).json({
                     success: false,
-                    message: "Invalid user ID."
+                    message: "Invalid user ID.",
                 });
             }
 
@@ -461,21 +440,21 @@ router.patch(
             if (!seller) {
                 return res.status(404).json({
                     success: false,
-                    message: "Pending seller application not found."
+                    message: "Pending seller application not found.",
                 });
             }
 
             return res.json({
                 success: true,
                 message: "Seller application rejected.",
-                seller
+                seller,
             });
         } catch (error) {
             console.error("Admin reject seller API:", error);
 
             return res.status(500).json({
                 success: false,
-                message: "Failed to reject seller application."
+                message: "Failed to reject seller application.",
             });
         }
     }

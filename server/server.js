@@ -1,8 +1,7 @@
 const path = require("path");
 
-// Load environment variables from project root
 require("dotenv").config({
-    path: path.join(__dirname, "..", ".env")
+    path: path.join(__dirname, "..", ".env"),
 });
 
 const mongoose = require("mongoose");
@@ -15,8 +14,8 @@ async function startServer() {
         process.exit(1);
     }
 
-    if (!process.env.SESSION_SECRET) {
-        console.error("Error: SESSION_SECRET is missing from root .env");
+    if (!process.env.JWT_SECRET) {
+        console.error("Error: JWT_SECRET is missing from root .env");
         process.exit(1);
     }
 
@@ -24,8 +23,7 @@ async function startServer() {
         await mongoose.connect(process.env.MONGO_URI);
 
         console.log(
-            "MongoDB connected to:",
-            mongoose.connection.name
+            `MongoDB connected to: ${mongoose.connection.name}`
         );
 
         const app = require("./app");
@@ -38,17 +36,26 @@ async function startServer() {
 
         const shutdown = () => {
             if (isShuttingDown) return;
-            isShuttingDown = true;
 
+            isShuttingDown = true;
             console.log("\nShutting down server...");
 
-            server.close(async () => {
+            server.close(async (error) => {
                 try {
                     await mongoose.disconnect();
-                    console.log("Server and MongoDB connection closed");
+
+                    if (error) {
+                        throw error;
+                    }
+
+                    console.log("Server and MongoDB connection closed.");
                     process.exit(0);
-                } catch (error) {
-                    console.error("Shutdown error:", error.message);
+                } catch (shutdownError) {
+                    console.error(
+                        "Shutdown error:",
+                        shutdownError.message
+                    );
+
                     process.exit(1);
                 }
             });
@@ -56,7 +63,6 @@ async function startServer() {
 
         process.on("SIGINT", shutdown);
         process.on("SIGTERM", shutdown);
-
     } catch (error) {
         console.error("Failed to start server:", error.message);
 

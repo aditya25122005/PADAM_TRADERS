@@ -21,10 +21,6 @@ const OTP_EXPIRY_MS = 5 * 60 * 1000;
 const FRONTEND_URL =
     process.env.CLIENT_URL || "http://localhost:5173";
 
-// =====================================================
-// HELPERS
-// =====================================================
-
 function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -88,13 +84,6 @@ function publicUser(user) {
     };
 }
 
-function clearLegacySessionCookie(res) {
-    // Clear any session cookie left over from the old implementation.
-    res.clearCookie("connect.sid", {
-        path: "/",
-    });
-}
-
 function invalidTokenError(error) {
     return [
         "JsonWebTokenError",
@@ -103,11 +92,7 @@ function invalidTokenError(error) {
     ].includes(error.name);
 }
 
-// =====================================================
-// SEND OTP
-// POST /send-otp
-// =====================================================
-
+// Send OTP
 router.post("/send-otp", async (req, res) => {
     try {
         const email = String(req.body.email || "")
@@ -134,7 +119,6 @@ router.post("/send-otp", async (req, res) => {
 
         const otp = generateOtp();
 
-        // Store only a hash, never the plain OTP.
         await storeSignupOtp(email, otp);
         await sendOtpMail(email, otp);
 
@@ -150,11 +134,7 @@ router.post("/send-otp", async (req, res) => {
     }
 });
 
-// =====================================================
-// RESEND OTP
-// POST /resend-otp
-// =====================================================
-
+// Resend OTP
 router.post("/resend-otp", async (req, res) => {
     try {
         const email = String(req.body.email || "")
@@ -206,11 +186,7 @@ router.post("/resend-otp", async (req, res) => {
     }
 });
 
-// =====================================================
-// VERIFY OTP
-// POST /verify-otp
-// =====================================================
-
+// Verify OTP
 router.post("/verify-otp", async (req, res) => {
     try {
         const email = String(req.body.email || "")
@@ -260,7 +236,10 @@ router.post("/verify-otp", async (req, res) => {
         }
 
         const expectedHash = Buffer.from(record.otpHash, "hex");
-        const receivedHash = Buffer.from(hashOtp(email, otp), "hex");
+        const receivedHash = Buffer.from(
+            hashOtp(email, otp),
+            "hex"
+        );
 
         const valid =
             expectedHash.length === receivedHash.length &&
@@ -290,11 +269,7 @@ router.post("/verify-otp", async (req, res) => {
     }
 });
 
-// =====================================================
-// REGISTER
-// POST /api/auth/register
-// =====================================================
-
+// Register
 router.post("/api/auth/register", async (req, res) => {
     try {
         const username = String(req.body.username || "").trim();
@@ -339,7 +314,6 @@ router.post("/api/auth/register", async (req, res) => {
             });
         }
 
-        // Verify the MongoDB OTP record.
         const otpRecord = await SignupOtp.findOne({ email });
 
         if (!otpRecord || !otpRecord.verifiedAt) {
@@ -369,7 +343,6 @@ router.post("/api/auth/register", async (req, res) => {
         const newUser = await User.register(user, password);
         const token = generateToken(newUser._id);
 
-        // Prevent the same verified OTP from being reused.
         await SignupOtp.deleteOne({ _id: otpRecord._id });
 
         setTokenCookie(res, token);
@@ -399,11 +372,7 @@ router.post("/api/auth/register", async (req, res) => {
     }
 });
 
-// =====================================================
-// LOGIN
-// POST /api/auth/login
-// =====================================================
-
+// Login
 router.post("/api/auth/login", (req, res, next) => {
     passport.authenticate("local", (error, user, info) => {
         if (error) {
@@ -439,14 +408,13 @@ router.post("/api/auth/login", (req, res, next) => {
     })(req, res, next);
 });
 
-// =====================================================
-// LOGOUT
-// POST /api/auth/logout
-// =====================================================
-
+// Logout
 router.post("/api/auth/logout", (req, res) => {
     clearTokenCookie(res);
-    clearLegacySessionCookie(res);
+
+    res.clearCookie("connect.sid", {
+        path: "/",
+    });
 
     return res.json({
         success: true,
@@ -454,11 +422,7 @@ router.post("/api/auth/logout", (req, res) => {
     });
 });
 
-// =====================================================
-// GOOGLE LOGIN
-// GET /auth/google
-// =====================================================
-
+// Start Google OAuth
 router.get(
     "/auth/google",
     passport.authenticate("google", {
@@ -467,11 +431,7 @@ router.get(
     })
 );
 
-// =====================================================
-// GOOGLE CALLBACK
-// GET /auth/google/callback
-// =====================================================
-
+// Google OAuth callback
 router.get(
     "/auth/google/callback",
     (req, res, next) => {
@@ -481,10 +441,7 @@ router.get(
             (error, user) => {
                 if (error || !user) {
                     if (error) {
-                        console.error(
-                            "Google login error:",
-                            error.message
-                        );
+                        console.error("Google login error:", error.message);
                     }
 
                     clearTokenCookie(res);
@@ -517,12 +474,7 @@ router.get(
     }
 );
 
-// =====================================================
-// CURRENT USER
-// GET /api/auth/me
-// JWT ONLY
-// =====================================================
-
+// Current authenticated user
 router.get("/api/auth/me", async (req, res, next) => {
     try {
         const token = req.cookies?.[COOKIE_NAME];
@@ -551,7 +503,7 @@ router.get("/api/auth/me", async (req, res, next) => {
             return next(error);
         }
 
-        if (!decoded.sub) {
+        if (typeof decoded.sub !== "string") {
             clearTokenCookie(res);
 
             return res.json({

@@ -1,86 +1,12 @@
-
 const path = require("path");
-const cors = require("cors");
 require("dotenv").config({
-    path: path.join(__dirname, "..", ".env")
+    path: path.join(__dirname, "..", ".env"),
 });
 
 const express = require("express");
-const app = express();
-
-// =====================================
-// CORS CONFIGURATION
-// =====================================
-const corsOptions = {
-    origin: "http://localhost:5173",
-    credentials: true,
-    methods: [
-        "GET",
-        "HEAD",
-        "POST",
-        "PUT",
-        "PATCH",
-        "DELETE",
-        "OPTIONS"
-    ],
-    allowedHeaders: [
-        "Content-Type",
-        "Authorization"
-    ],
-    optionsSuccessStatus: 204
-};
-
-// =====================================
-// CORS DEBUG LOGGER
-// IMPORTANT: This must be BEFORE cors()
-// =====================================
-app.use((req, res, next) => {
-    if (req.method === "OPTIONS") {
-        console.log("\n========== CORS PREFLIGHT ==========");
-        console.log("URL:", req.originalUrl);
-        console.log("Origin:", req.headers.origin);
-        console.log(
-            "Requested method:",
-            req.headers["access-control-request-method"]
-        );
-        console.log(
-            "Requested headers:",
-            req.headers["access-control-request-headers"]
-        );
-
-        res.on("finish", () => {
-            console.log("Response status:", res.statusCode);
-            console.log(
-                "Allow-Origin:",
-                res.getHeader("Access-Control-Allow-Origin")
-            );
-            console.log(
-                "Allow-Methods:",
-                res.getHeader("Access-Control-Allow-Methods")
-            );
-            console.log(
-                "Allow-Headers:",
-                res.getHeader("Access-Control-Allow-Headers")
-            );
-            console.log("====================================\n");
-        });
-    }
-
-    next();
-});
-
-// Apply CORS to API and other routes
-app.use(cors(corsOptions));
-
-// =====================================
-// IMPORTS
-// =====================================
-
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
-
 const passport = require("passport");
-const localStrategy = require("passport-local");
-
 
 const User = require("./models/User");
 
@@ -92,51 +18,54 @@ const reviewRoutes = require("./routes/review");
 const cartRoutes = require("./routes/cart");
 const adminApiRoutes = require("./routes/api/admin");
 
-
-
-
-
-// =====================================
-// GENERAL MIDDLEWARE
-// =====================================
-app.use(express.static(path.join(__dirname, "..", "public")));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-
+const app = express();
 
 app.set("trust proxy", 1);
 
+// CORS configuration
+app.use(
+    cors({
+        origin: process.env.CLIENT_URL || "http://localhost:5173",
+        credentials: true,
+        methods: [
+            "GET",
+            "HEAD",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "OPTIONS",
+        ],
+        allowedHeaders: [
+            "Content-Type",
+            "Authorization",
+        ],
+        optionsSuccessStatus: 204,
+    })
+);
 
+// General middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "..", "public")));
 
-
-
-// =====================================
-// PASSPORT CONFIGURATION
-// =====================================
+// Passport configuration
 app.use(passport.initialize());
 
+const LocalStrategy = require("passport-local").Strategy;
 
-passport.use(new localStrategy(User.authenticate()));
+passport.use(new LocalStrategy(User.authenticate()));
 
 require("./config/googleStrategy");
 
-
-// =====================================
-// ROUTES
-// =====================================
+// Routes
 app.use(productApi);
 app.use(productRoutes);
 app.use(authRoutes);
-
 app.use(reviewRoutes);
 app.use(contactRoutes);
 app.use(cartRoutes);
 app.use(adminApiRoutes);
 
-
-
-// =====================================
-// EXPORT APP
-// =====================================
 module.exports = app;

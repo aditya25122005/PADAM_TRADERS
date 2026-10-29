@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
@@ -20,8 +19,8 @@ function Cart() {
       console.error('Cart fetch error:', err)
       setError(
         err.response?.status === 401 || err.response?.status === 403
-          ? 'Cart dekhne ke liye pehle login karo.'
-          : 'Cart load nahi ho paaya. Please try again.'
+          ? 'Please login first to view your cart.'
+          : 'Could not load cart. Please try again.'
       )
     } finally {
       setLoading(false)
@@ -41,10 +40,10 @@ function Cart() {
       setProducts((current) =>
         current.filter((product) => product._id !== productId)
       )
-      setMessage('Product cart se remove ho gaya.')
+      setMessage('Product removed from cart successfully.')
     } catch (err) {
       console.error('Remove cart error:', err)
-      setMessage('Product remove nahi hua. Please try again.')
+      setMessage('Could not remove product. Please try again.')
     } finally {
       setRemovingId(null)
     }

@@ -14,8 +14,6 @@ function Home() {
 
     async function fetchProducts() {
       try {
-        // Use the configured Axios instance so the login session
-        // cookie is included in the request.
         const res = await api.get('/api/products');
 
         if (active) {
@@ -28,7 +26,7 @@ function Home() {
 
         if (active) {
           setError(
-            'Products load nahi ho paaye. Please try again.'
+            'Could not load products. Please try again.'
           );
         }
       } finally {

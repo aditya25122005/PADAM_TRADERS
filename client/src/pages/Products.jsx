@@ -36,41 +36,9 @@ function Products() {
         ? authRes.data.user
         : null
 
-      // DEBUG: Check logged-in seller details
-      console.log('========== PRODUCTS PAGE DEBUG ==========')
-      console.log('Login response:', {
-        loggedIn: authRes.data.loggedIn,
-        username: loggedInUser?.username,
-        userId: getId(loggedInUser),
-        role: loggedInUser?.role,
-        sellerStatus: loggedInUser?.sellerStatus,
-      })
-
       if (!Array.isArray(productsRes.data)) {
-        throw new Error('Products ka response sahi format mein nahi hai.')
+        throw new Error('Products response is not in the correct format.')
       }
-
-      // DEBUG: Compare seller ID with every product owner ID
-      console.table(
-        productsRes.data.map((product) => {
-          const userId = getId(loggedInUser)
-          const ownerId = getId(product.author)
-
-          return {
-            productName: product.name,
-            userId,
-            role: loggedInUser?.role,
-            sellerStatus: loggedInUser?.sellerStatus,
-            productAuthorId: ownerId,
-            sameOwner:
-              userId !== '' &&
-              ownerId !== '' &&
-              userId === ownerId,
-          }
-        })
-      )
-
-      console.log('=========================================')
 
       setProducts(productsRes.data)
       setUser(loggedInUser)
@@ -78,9 +46,9 @@ function Products() {
       console.error('Products fetch error:', err)
 
       setError(
-        err.message === 'Products ka response sahi format mein nahi hai.'
+        err.message === 'Products response is not in the correct format.'
           ? err.message
-          : 'Products load nahi ho paaye. Please try again.'
+          : 'Could not load products. Please try again.'
       )
     } finally {
       setLoading(false)
@@ -113,7 +81,7 @@ function Products() {
 
   const handleDelete = async (product) => {
     const confirmed = window.confirm(
-      `Kya tum "${product.name}" ko delete karna chahte ho?`
+      `Are you sure you want to delete "${product.name}"?`
     )
 
     if (!confirmed) return
@@ -131,7 +99,7 @@ function Products() {
 
       setDeleteError(
         err.response?.data?.message ||
-          'Product delete nahi hua. Please try again.'
+          'Product could not be deleted. Please try again.'
       )
     }
   }

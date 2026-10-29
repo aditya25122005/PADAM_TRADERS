@@ -1,63 +1,107 @@
-const express=require('express');
-const { isLoggedIn } = require('../middleware');
-const Product = require('../models/Product');
-const User = require('../models/User');
-const router=express.Router();
+const express = require("express");
+const mongoose = require("mongoose");
 
+const { isLoggedIn } = require("../middleware");
+const Product = require("../models/Product");
+const User = require("../models/User");
 
+const router = express.Router();
 
-/* React API: Get cart */
-router.get('/api/cart', isLoggedIn, async (req, res, next) => {
+// Get cart
+router.get("/api/cart", isLoggedIn, async (req, res, next) => {
     try {
-        const user = await User.findById(req.user._id)
-            .populate('cart');
+        const user = await User.findById(req.user._id).populate("cart");
 
-        res.json(user.cart);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found.",
+            });
+        }
+
+        return res.json(user.cart);
     } catch (error) {
-        next(error);
+        return next(error);
     }
 });
 
-/* React API: Add product to cart */
-router.post('/api/cart/:productId', isLoggedIn, async (req, res, next) => {
+// Add product to cart
+router.post("/api/cart/:productId", isLoggedIn, async (req, res, next) => {
     try {
         const { productId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid product ID.",
+            });
+        }
 
         const product = await Product.findById(productId);
 
         if (!product) {
             return res.status(404).json({
-                message: 'Product not found'
+                success: false,
+                message: "Product not found.",
             });
         }
 
         const user = await User.findById(req.user._id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found.",
+            });
+        }
+
         user.cart.push(productId);
         await user.save();
 
-        res.status(200).json({
-            message: 'Added to cart successfully'
+        return res.status(200).json({
+            success: true,
+            message: "Added to cart successfully.",
         });
     } catch (error) {
-        next(error);
+        return next(error);
     }
 });
 
-/* React API: Remove product from cart */
-router.delete('/api/cart/:productId', isLoggedIn, async (req, res, next) => {
-    try {
-        const user = await User.findById(req.user._id);
-        user.cart.pull(req.params.productId);
-        await user.save();
+// Remove product from cart
+router.delete(
+    "/api/cart/:productId",
+    isLoggedIn,
+    async (req, res, next) => {
+        try {
+            const { productId } = req.params;
 
-        res.json({
-            message: 'Product removed from cart'
-        });
-    } catch (error) {
-        next(error);
+            if (!mongoose.Types.ObjectId.isValid(productId)) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid product ID.",
+                });
+            }
+
+            const user = await User.findById(req.user._id);
+
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: "User not found.",
+                });
+            }
+
+            user.cart.pull(productId);
+            await user.save();
+
+            return res.json({
+                success: true,
+                message: "Product removed from cart.",
+            });
+        } catch (error) {
+            return next(error);
+        }
     }
-});
+);
 
-
-
-module.exports=router;
+module.exports = router;

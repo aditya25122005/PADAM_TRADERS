@@ -35,13 +35,9 @@ const signupOtpSchema = new mongoose.Schema(
     }
 );
 
-// Automatically clean up expired OTP records.
 signupOtpSchema.index(
     { expiresAt: 1 },
     { expireAfterSeconds: 0 }
 );
 
-module.exports = mongoose.model(
-    "SignupOtp",
-    signupOtpSchema
-);
+module.exports = mongoose.model("SignupOtp", signupOtpSchema);

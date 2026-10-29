@@ -31,13 +31,8 @@ const userSchema = new mongoose.Schema({
         default: "none",
     },
 
-    sellerAppliedAt: {
-        type: Date,
-    },
-
-    sellerApprovedAt: {
-        type: Date,
-    },
+    sellerAppliedAt: Date,
+    sellerApprovedAt: Date,
 
     wishlist: [
         {
@@ -107,10 +102,6 @@ const userSchema = new mongoose.Schema({
     ],
 });
 
-// Required for existing username/password authentication.
-// Passport Local Mongoose manages password hashing and verification.
 userSchema.plugin(passportLocalMongoose);
 
-const User = mongoose.model("User", userSchema);
-
-module.exports = User;
+module.exports = mongoose.model("User", userSchema);
