@@ -23,26 +23,23 @@ const app = express();
 app.set("trust proxy", 1);
 
 // CORS configuration
-app.use(
-    cors({
-        origin: process.env.CLIENT_URL || "http://localhost:5173",
-        credentials: true,
-        methods: [
-            "GET",
-            "HEAD",
-            "POST",
-            "PUT",
-            "PATCH",
-            "DELETE",
-            "OPTIONS",
-        ],
-        allowedHeaders: [
-            "Content-Type",
-            "Authorization",
-        ],
-        optionsSuccessStatus: 204,
-    })
-);
+const allowedOrigins = [
+  "https://padam-traders-frontend.onrender.com",
+  "http://localhost:5173",
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, origin || true);
+    }
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+  methods: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 204,
+}));
 
 // General middleware
 app.use(express.json());
